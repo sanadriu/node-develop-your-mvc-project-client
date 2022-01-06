@@ -12,15 +12,18 @@ import {
 const initialState = {
 	currentUser: null,
 	authError: null,
+	isLoading: false,
 };
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const { currentUser, authError } = state;
+	const { currentUser, authError, isLoading } = state;
 
 	useEffect(() => {
+		dispatch({ type: actionTypes.START_LOADING });
+
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
 			if (user) {
 				dispatch({ type: actionTypes.SET_CURRENT_USER, payload: { user } });
@@ -37,6 +40,7 @@ function AuthProvider({ children }) {
 	const value = {
 		currentUser,
 		authError,
+		isLoading,
 		createUserWithEmailAndPassword: useCallback((email, password) => {
 			createUserWithEmailAndPassword(dispatch, email, password);
 		}, []),

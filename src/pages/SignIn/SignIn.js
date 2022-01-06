@@ -9,7 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
 export default function SignIn(props) {
-	const { currentUser, authError, signInWithEmailAndPassword, resetAuthError } = useAuth();
+	const { currentUser, authError, isLoading, signInWithEmailAndPassword, resetAuthError } = useAuth();
 	const navigate = useNavigate();
 
 	const emailRef = useRef();
@@ -61,6 +61,7 @@ export default function SignIn(props) {
 						Sign Up
 					</Link>
 				</div>
+				{isLoading && <span>Loading...</span>}
 			</main>
 		</div>
 	);
