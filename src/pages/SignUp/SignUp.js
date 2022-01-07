@@ -70,7 +70,7 @@ export default function SignUp(props) {
 								type="submit"
 							>
 								<span>Sign In</span>
-								{isLoading && <div class="spinner-border spinner-border-sm" role="status"></div>}
+								{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>

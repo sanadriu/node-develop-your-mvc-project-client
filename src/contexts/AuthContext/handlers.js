@@ -1,5 +1,5 @@
 import * as Auth from "../../services/auth";
-import * as Api from "../../api";
+import { syncUser } from "../../api";
 import { actionTypes } from "./reducer";
 
 const signInWithEmailAndPassword = async (dispatch, email, password) => {
@@ -33,13 +33,7 @@ const createUserWithEmailAndPassword = async (dispatch, email, password) => {
 	dispatch({ type: actionTypes.START_LOADING });
 
 	try {
-		const {
-			user: { uid },
-		} = await Auth.createUserWithEmailAndPassword(email, password);
-
-		const response = await Api.signUp({ email, uid });
-
-		if (!response.success) throw new Error(response.message);
+		await Auth.createUserWithEmailAndPassword(email, password);
 	} catch (error) {
 		dispatch({ type: actionTypes.ERROR, payload: { error } });
 	}

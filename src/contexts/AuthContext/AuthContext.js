@@ -8,9 +8,12 @@ import {
 	signOut,
 	sendPasswordResetEmail,
 } from "./handlers";
+import { syncUser } from "../../api";
+
 
 const initialState = {
 	currentUser: null,
+	info: null,
 	authError: null,
 	isLoading: false,
 };
@@ -19,14 +22,23 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const { currentUser, authError, isLoading } = state;
+	const { currentUser, info, authError, isLoading } = state;
 
 	useEffect(() => {
 		dispatch({ type: actionTypes.START_LOADING });
 
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
 			if (user) {
-				dispatch({ type: actionTypes.SUCCESS, payload: { user } });
+				syncUser(user.accessToken).then(response => {
+					if(!response.data?.success) return Promise.reject("Could not sync user with DB");
+					
+					const info = response.data.data;
+
+					dispatch({ type: actionTypes.SET_INFO, payload: { info } });
+					dispatch({ type: actionTypes.SUCCESS, payload: { user } });
+				}).catch((error) => {
+					dispatch({ type: actionTypes.ERROR, payload: { error } });
+				})
 			} else {
 				dispatch({ type: actionTypes.CLEAR_USER });
 			}
@@ -38,6 +50,8 @@ function AuthProvider({ children }) {
 			if (unsubscribeFromAuth) unsubscribeFromAuth();
 		};
 	}, []);
+
+	console.log(currentUser, info);
 
 	const value = {
 		currentUser,

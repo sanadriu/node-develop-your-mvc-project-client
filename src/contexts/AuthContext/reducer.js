@@ -5,6 +5,7 @@ const actionTypes = {
 	ERROR: Symbol(),
 	CLEAR_USER: Symbol(),
 	CLEAR_ERROR: Symbol(),
+	SET_INFO: Symbol(),
 };
 
 function reducer(state, action) {
@@ -26,6 +27,11 @@ function reducer(state, action) {
 				...state,
 				currentUser: payload.user,
 			};
+		case actionTypes.SET_INFO:
+			return {
+				...state,
+				info: payload.info,
+			};
 		case actionTypes.ERROR:
 			return {
 				...state,
@@ -35,6 +41,7 @@ function reducer(state, action) {
 			return {
 				...state,
 				currentUser: null,
+				info: null,
 			};
 		case actionTypes.CLEAR_ERROR:
 			return {

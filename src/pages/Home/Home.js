@@ -6,6 +6,8 @@ import NavPagination from "../../components/NavPagination";
 
 import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -16,16 +18,24 @@ export default function Home(props) {
 	return (
 		<div className="d-flex flex-column min-vh-100">
 			<Header />
-			<main className="flex-basis-1 p-2">
-				<Container className="d-flex flex-column justify-content-center align-items-center" fluid>
+			<main className="flex-grow-1 p-5">
+				<div className="h-100">
 					{status === "loading" && <Spinner animation="border" role="status" />}
 					{status === "success" && success && (
-						<div className="">
-							{products.map((product) => (
-								<p key={product._id}>{product.title}</p>
-							))}
-							<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
-						</div>
+						<>
+							<div className="h-75">
+								<Row>
+									{products.map((product) => (
+										<Col xs={12} sm={6} md={3} key={product._id}>
+											<p className="text-center border">{product.title}</p>
+										</Col>
+									))}
+								</Row>
+							</div>
+							<div className="h-25 d-flex flex-row justify-content-center">
+								<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
+							</div>
+						</>
 					)}
 					{status === "error" && !success && (
 						<>
@@ -34,7 +44,7 @@ export default function Home(props) {
 						</>
 					)}
 					{status === "error" && <p>Something went wrong :(</p>}
-				</Container>
+				</div>
 			</main>
 		</div>
 	);
