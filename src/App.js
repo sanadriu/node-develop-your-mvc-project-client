@@ -16,7 +16,7 @@ function App() {
 					<Route path="/sign-up" element={<SignUp />} />
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
-					<Route path="/product" element={<Product />} />
+					<Route path="/product/:idProduct" element={<Product />} />
 				</Routes>
 			</BrowserRouter>
 		</AuthProvider>

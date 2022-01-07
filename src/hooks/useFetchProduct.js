@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { getProducts } from "../api";
+import { getProduct } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
 const initialState = {
@@ -16,7 +16,7 @@ export default function useFetchProduct(id) {
 
 		const params = { id };
 
-		getProducts(params)
+		getProduct(params)
 			.then((response) => {
 				dispatch({ type: actionTypes.SUCCESS, payload: response.data });
 			})

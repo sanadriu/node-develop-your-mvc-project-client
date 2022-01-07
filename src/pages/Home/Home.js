@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useFetchProducts } from "../../hooks";
+import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
 import NavPagination from "../../components/NavPagination";
@@ -9,8 +10,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
+	const navigate = useNavigate();
 
 	const { response, status } = useFetchProducts(currentPage);
 	const { success, data: products, lastPage, message } = response;
@@ -27,10 +30,9 @@ export default function Home(props) {
 								<Row>
 									{products.map((product) => (
 										<Col xs={12} sm={6} md={3} key={product._id}>
-											{/* <p className="text-center border">{product.title}</p>
-											
-										 */}
-											<ProductCard title={product.title} description={product.description} images={product.images} stock={product.stock} price={product.price}/>
+											<p className="text-center border p-3" style={{cursor: "pointer"}}onClick={() => {
+												navigate(`/product/${product._id}`);
+											}}>{product.title}</p>
 										</Col>
 									))}
 								</Row>
@@ -52,3 +54,5 @@ export default function Home(props) {
 		</div>
 	);
 }
+
+{/* <ProductCard title={product.title} description={product.description} images={product.images} stock={product.stock} price={product.price}/> */}
