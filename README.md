@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+`#node.js` `#mvc` `#assembler-school` `#master-in-software-engineering`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-## Available Scripts
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 
-In the project directory, you can run:
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-### `npm start`
+# (Client) Assembler School: Node.js Develop Your Project MVC <!-- omit in toc -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+> In this project you will be able to create one of our Develop Your Project
+> projects based on the MVC pattern in Node.js.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Index <!-- omit in toc -->
 
-### `npm test`
+- [Getting Started](#getting-started)
+- [Deployment](#deployment)
+- [Technologies used](#technologies-used)
+- [Project requirements](#project-requirements)
+- [Project delivery](#project-delivery)
+- [Resources](#resources)
+- [License](#license)
+- [Contributors ✨](#contributors-)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting Started
 
-### `npm run build`
+These instructions will get you a copy of the project up and running on your
+local machine for development and testing purposes. See deployment for notes on
+how to deploy the project on a live system (**if it applies to this
+project/pill**).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### The repository
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+First, you will need to `clone` or `fork` the repository into your Github
+account:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<img src="https://docs.github.com/assets/images/help/repository/fork_button.jpg" alt="Fork on GitHub" width='450'>
 
-### `npm run eject`
+```
+$ git clone https://github.com/assembler-school/node-develop-your-mvc-project.git
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Deployment
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+For this project you can use Netlify to deploy the front app.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Technologies used
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- React.js
 
-## Learn More
+## Project requirements
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- You must use semantic HTML5 elements for all the contents of the application
+- All code including comments need to be written in English
+- Use a code style like camelCase
+- It is recommended to divide the tasks into several subtasks so that you can
+  associate each particular step of the construction with a specific commitment
+- You should try as much as possible that the commits and planned tasks are the
+  same
+- You must create a correctly documented README.md file in the root directory of
+  the project (see guidelines in Resources)
+- All the routes that are specified as protected should be protected so that
+  only users that are logged in and have the appropriate ROLE (ADMIN | EMPLOYEE)
+  can perform operations and access data or endpoints
+- You must store any sensitive data in .env variables and ignore the file from
+  the git repository history
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project delivery
 
-### Code Splitting
+To deliver this project you must follow the steps indicated in the document:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- [Submitting a solution](https://www.notion.so/Submitting-a-solution-524dab1a71dd4b96903f26385e24cdb6)
 
-### Analyzing the Bundle Size
+## Resources
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- See the original doc provided by us
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details
 
-### Advanced Configuration
+## Contributors ✨
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Thanks goes to these wonderful people
+([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-### Deployment
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://www.danilucaci.com"><img src="https://avatars.githubusercontent.com/u/19062818?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dani Lucaci</b></sub></a><br /><a href="https://github.com/assembler-school/vanilla-js-project-template/commits?author=danilucaci" title="Code">💻</a> <a href="https://github.com/assembler-school/vanilla-js-project-template/commits?author=danilucaci" title="Documentation">📖</a> <a href="#example-danilucaci" title="Examples">💡</a> <a href="#tool-danilucaci" title="Tools">🔧</a></td>
+  </tr>
+</table>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-### `npm run build` fails to minify
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project follows the
+[all-contributors](https://github.com/all-contributors/all-contributors)
+specification. Contributions of any kind welcome!
