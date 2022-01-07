@@ -1,18 +1,25 @@
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Header from "../../components/Header";
 import Alert from "react-bootstrap/Alert";
+
+import Header from "../../components/Header";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { default as schema } from "./schema.js";
 
 export default function SignUp(props) {
-	const { currentUser, authError, isLoading, createUserWithEmailAndPassword, setAuthError, resetAuthError } = useAuth();
+	const { currentUser, authError, isLoading, createUserWithEmailAndPassword, resetAuthError } = useAuth();
 	const navigate = useNavigate();
+	const [errors, setErrors] = useState({});
 
+	const firstnameRef = useRef();
+	const lastnameRef = useRef();
 	const emailRef = useRef();
+	const phoneRef = useRef();
 	const passwordRef = useRef();
 	const passwordConfirmRef = useRef();
 
@@ -27,38 +34,68 @@ export default function SignUp(props) {
 	function handleSubmit(event) {
 		event.preventDefault();
 
-		const email = emailRef.current.value;
-		const password = passwordRef.current.value;
-		const passwordConfirm = passwordConfirmRef.current.value;
+		const values = {
+			firstname: firstnameRef.current.value,
+			lastname: lastnameRef.current.value,
+			email: emailRef.current.value,
+			phone: phoneRef.current.value,
+			password: passwordRef.current.value,
+			passwordConfirm: passwordConfirmRef.current.value,
+		}
 
-		password === passwordConfirm
-			? createUserWithEmailAndPassword(email, password)
-			: setAuthError("Password and confirmation do not match.");
+		schema.validate(values, { abortEarly: false }).then(() => {
+			setErrors(() => {});
+
+			createUserWithEmailAndPassword();
+		}).catch(error => {
+
+			setErrors(() => error)
+		})
 	}
+
+	console.log(errors.inner);
+
+// 	name: "ValidationError"
+// path: a string, indicating where there error was thrown. path is empty at the root level.
+// errors: array of error messages
+// inner: in the case of aggregate errors, inner is an array of ValidationErrors throw earlier in the validation chain. When the abortEarly option is false this is where you can 	inspect each error thrown, alternatively, errors 
 
 	return (
 		<div className="d-flex flex-column vh-100">
 			<Header />
 			<main className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-				<Card style={{ width: "24rem" }}>
+				<Card style={{ width: "32rem" }}>
 					<Card.Body className="bg-light">
 						<h1 className="text-center fw-light fs-3 my-3">Sign Up</h1>
 						{authError && <Alert variant="danger">{authError.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
+							<div className="d-flex gap-2">
+								<Form.Group className="flex-grow-1 mb-3">
+									<Form.Label htmlFor="input_firstname">First name</Form.Label>
+									<Form.Control id="input_firstname" type="text" placeholder="John" ref={firstnameRef} />
+								</Form.Group>
+								<Form.Group className="flex-grow-1 mb-3">
+									<Form.Label htmlFor="input_lastname">Last name</Form.Label>
+									<Form.Control id="input_lastname" type="text" placeholder="Doe" ref={lastnameRef} />
+								</Form.Group>
+							</div>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_email">Email address</Form.Label>
-								<Form.Control id="input_email" type="email" placeholder="Enter email" ref={emailRef} required />
+								<Form.Control id="input_email" type="text" placeholder="john.doe@mail.com" ref={emailRef} />
+							</Form.Group>
+							<Form.Group className="mb-3">
+								<Form.Label htmlFor="input_phone">Phone number</Form.Label>
+								<Form.Control id="input_phone" type="text" placeholder="+447700000000" ref={phoneRef} />
 							</Form.Group>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_password">Password</Form.Label>
-								<Form.Control id="input_password" type="password" placeholder="Password" ref={passwordRef} required />
+								<Form.Control id="input_password" type="password" placeholder="Password" ref={passwordRef} />
 							</Form.Group>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_password_confirm">Password confirmation</Form.Label>
 								<Form.Control
 									id="input_password_confirm"
 									type="password"
-									placeholder="Password"
 									ref={passwordConfirmRef}
 									required
 								/>

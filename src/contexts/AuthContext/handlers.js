@@ -1,5 +1,4 @@
 import * as Auth from "../../services/auth";
-import { syncUser } from "../../api";
 import { actionTypes } from "./reducer";
 
 const signInWithEmailAndPassword = async (dispatch, email, password) => {

@@ -27,7 +27,10 @@ export default function Home(props) {
 								<Row>
 									{products.map((product) => (
 										<Col xs={12} sm={6} md={3} key={product._id}>
-											<p className="text-center border">{product.title}</p>
+											{/* <p className="text-center border">{product.title}</p>
+											
+										 */}
+											<ProductCard title={product.title} description={product.description} images={product.images} stock={product.stock} price={product.price}/>
 										</Col>
 									))}
 								</Row>
