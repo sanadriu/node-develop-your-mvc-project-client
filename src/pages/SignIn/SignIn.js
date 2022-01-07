@@ -49,8 +49,14 @@ export default function SignIn(props) {
 								<Form.Label htmlFor="input_password">Password</Form.Label>
 								<Form.Control id="input_password" type="password" placeholder="Password" ref={passwordRef} required />
 							</Form.Group>
-							<Button className="w-100 mt-3" variant="primary" size="sm" type="submit">
-								Sign In
+							<Button
+								className="w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
+								variant="primary"
+								size="sm"
+								type="submit"
+							>
+								<span>Sign In</span>
+								{isLoading && <div class="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>
@@ -61,7 +67,6 @@ export default function SignIn(props) {
 						Sign Up
 					</Link>
 				</div>
-				{isLoading && <span>Loading...</span>}
 			</main>
 		</div>
 	);

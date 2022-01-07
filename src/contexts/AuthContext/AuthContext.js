@@ -26,10 +26,12 @@ function AuthProvider({ children }) {
 
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
 			if (user) {
-				dispatch({ type: actionTypes.SET_CURRENT_USER, payload: { user } });
+				dispatch({ type: actionTypes.SUCCESS, payload: { user } });
 			} else {
-				dispatch({ type: actionTypes.RESET_CURRENT_USER });
+				dispatch({ type: actionTypes.CLEAR_USER });
 			}
+
+			dispatch({ type: actionTypes.END_LOADING });
 		});
 
 		return async () => {
@@ -57,10 +59,10 @@ function AuthProvider({ children }) {
 			sendPasswordResetEmail(dispatch);
 		}, []),
 		setAuthError: useCallback((message) => {
-			dispatch({ type: actionTypes.SET_AUTH_ERROR, payload: { error: new Error(message) } });
+			dispatch({ type: actionTypes.ERROR, payload: { error: new Error(message) } });
 		}, []),
 		resetAuthError: useCallback(() => {
-			dispatch({ type: actionTypes.RESET_AUTH_ERROR });
+			dispatch({ type: actionTypes.CLEAR_ERROR });
 		}, []),
 	};
 

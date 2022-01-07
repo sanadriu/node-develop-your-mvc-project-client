@@ -9,7 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
 export default function SignUp(props) {
-	const { currentUser, authError, createUserWithEmailAndPassword, setAuthError, resetAuthError } = useAuth();
+	const { currentUser, authError, isLoading, createUserWithEmailAndPassword, setAuthError, resetAuthError } = useAuth();
 	const navigate = useNavigate();
 
 	const emailRef = useRef();
@@ -63,8 +63,14 @@ export default function SignUp(props) {
 									required
 								/>
 							</Form.Group>
-							<Button className="w-100 mt-3" variant="primary" size="sm" type="submit">
-								Sign In
+							<Button
+								className="w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
+								variant="primary"
+								size="sm"
+								type="submit"
+							>
+								<span>Sign In</span>
+								{isLoading && <div class="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>
