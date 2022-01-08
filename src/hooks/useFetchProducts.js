@@ -8,7 +8,7 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchProducts(page = 1) {
+export default function useFetchProducts(page) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {

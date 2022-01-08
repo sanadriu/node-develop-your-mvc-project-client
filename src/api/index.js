@@ -1,23 +1,20 @@
 import axios from "axios";
 
-export async function syncUser(userToken, data) {
-	console.log(userToken);
-	
-  const response = await axios({
-    baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+export async function syncUser(token, data) {
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
 		url: "/users/sync",
 		method: "POST",
-    headers: {
+		headers: {
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "http://localhost:3000",
-      Authorization: `Bearer ${userToken}`,
-    },
-		data
-  });
+			Authorization: `Bearer ${token}`,
+		},
+		data,
+	});
 
 	return response;
 }
-
 
 export async function getUsers(token, params) {
 	const { page = 1 } = params;
@@ -176,19 +173,3 @@ export async function deleteProduct(token, params, data) {
 
 	return response;
 }
-
-// export async function syncUser(params) {
-// 	const { email, uid } = params;
-
-// 	const response = await axios({
-// 		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
-// 		url: "/users/sync",
-// 		method: "POST",
-// 		data: {
-// 			email,
-// 			uid,
-// 		},
-// 	});
-
-// 	return response;
-// }

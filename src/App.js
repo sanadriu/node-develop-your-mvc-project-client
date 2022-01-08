@@ -5,6 +5,9 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
+import Dashboard from "./pages/Dashboard";
+import UserList from "./components/UserList";
+import ProductList from "./components/ProductList";
 
 function App() {
 	return (
@@ -16,6 +19,10 @@ function App() {
 					<Route path="/sign-up" element={<SignUp />} />
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
+					<Route path="/dashboard" element={<Dashboard />}>
+						<Route path="users" element={<UserList />} />
+						<Route path="products" element={<ProductList />} />
+					</Route>
 					<Route path="/product/:idProduct" element={<Product />} />
 				</Routes>
 			</BrowserRouter>

@@ -6,7 +6,20 @@ const signInWithEmailAndPassword = async (dispatch, email, password) => {
 	dispatch({ type: actionTypes.LOADING });
 
 	try {
-		await Auth.signInWithEmailAndPassword(email, password);
+		const { user } = await Auth.signInWithEmailAndPassword(email, password);
+		const response = await syncUser(user.accessToken);
+
+		if (!response.data?.success) {
+			throw new Error("Could not sync user with DB");
+		} else {
+			const details = response.data.data;
+			const currentUser = {
+				...user,
+				...details,
+			};
+
+			dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
+		}
 	} catch (error) {
 		dispatch({ type: actionTypes.ERROR, payload: error });
 	}
@@ -28,7 +41,7 @@ const createUserWithEmailAndPassword = async (dispatch, data) => {
 	try {
 		const { email, password, ...details } = data;
 
-		const user = await Auth.createUserWithEmailAndPassword(email, password);
+		const { user } = await Auth.createUserWithEmailAndPassword(email, password);
 		const response = await syncUser(user.accessToken, details);
 
 		if (!response.data?.success) {

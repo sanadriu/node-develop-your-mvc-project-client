@@ -39,7 +39,7 @@ export default function SignIn(props) {
 				<Card style={{ width: "24rem" }}>
 					<Card.Body className="bg-light">
 						<h1 className="text-center fw-light fs-3 my-3">Sign In</h1>
-						{authError && <Alert variant="danger">{authError.message}</Alert>}
+						{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_email">Email address</Form.Label>

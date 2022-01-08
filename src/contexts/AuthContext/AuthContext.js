@@ -20,7 +20,7 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const { currentUser, info, authError, isLoading } = state;
+	const { currentUser, authError, isLoading } = state;
 
 	useEffect(() => {
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
@@ -51,8 +51,6 @@ function AuthProvider({ children }) {
 			if (unsubscribeFromAuth) unsubscribeFromAuth();
 		};
 	}, []);
-
-	console.log(currentUser, info, isLoading);
 
 	const value = {
 		currentUser,

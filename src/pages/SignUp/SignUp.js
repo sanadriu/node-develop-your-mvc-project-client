@@ -47,6 +47,7 @@ export default function SignUp(props) {
 		schema
 			.validate(values, { abortEarly: false })
 			.then(() => {
+				setErrors(() => null);
 				createUserWithEmailAndPassword(values);
 			})
 			.catch((validationErrors) => {
@@ -60,8 +61,6 @@ export default function SignUp(props) {
 			});
 	}
 
-	console.log(errors);
-
 	return (
 		<div className="d-flex flex-column vh-100">
 			<Header />
@@ -69,7 +68,7 @@ export default function SignUp(props) {
 				<Card style={{ width: "32rem" }}>
 					<Card.Body className="bg-light">
 						<h1 className="text-center fw-light fs-3 my-3">Sign Up</h1>
-						{authError && <Alert variant="danger">{authError.message}</Alert>}
+						{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
 							<div className="d-flex gap-2">
 								<Form.Group className="flex-grow-1 mb-3">
