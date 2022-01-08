@@ -10,10 +10,8 @@ import {
 } from "./handlers";
 import { syncUser } from "../../api";
 
-
 const initialState = {
 	currentUser: null,
-	info: null,
 	authError: null,
 	isLoading: false,
 };
@@ -25,25 +23,28 @@ function AuthProvider({ children }) {
 	const { currentUser, info, authError, isLoading } = state;
 
 	useEffect(() => {
-		dispatch({ type: actionTypes.START_LOADING });
-
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
 			if (user) {
-				syncUser(user.accessToken).then(response => {
-					if(!response.data?.success) return Promise.reject("Could not sync user with DB");
-					
-					const info = response.data.data;
+				dispatch({ type: actionTypes.LOADING });
 
-					dispatch({ type: actionTypes.SET_INFO, payload: { info } });
-					dispatch({ type: actionTypes.SUCCESS, payload: { user } });
-				}).catch((error) => {
-					dispatch({ type: actionTypes.ERROR, payload: { error } });
-				})
+				syncUser(user.accessToken)
+					.then((response) => {
+						if (!response.data?.success) return Promise.reject("Could not sync user with DB");
+
+						const details = response.data.data;
+						const currentUser = {
+							...user,
+							...details,
+						};
+
+						dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
+					})
+					.catch((error) => {
+						dispatch({ type: actionTypes.ERROR, payload: error });
+					});
 			} else {
 				dispatch({ type: actionTypes.CLEAR_USER });
 			}
-
-			dispatch({ type: actionTypes.END_LOADING });
 		});
 
 		return async () => {
@@ -51,14 +52,14 @@ function AuthProvider({ children }) {
 		};
 	}, []);
 
-	console.log(currentUser, info);
+	console.log(currentUser, info, isLoading);
 
 	const value = {
 		currentUser,
 		authError,
 		isLoading,
-		createUserWithEmailAndPassword: useCallback((email, password) => {
-			createUserWithEmailAndPassword(dispatch, email, password);
+		createUserWithEmailAndPassword: useCallback((data) => {
+			createUserWithEmailAndPassword(dispatch, data);
 		}, []),
 		signInWithEmailAndPassword: useCallback((email, password) => {
 			signInWithEmailAndPassword(dispatch, email, password);

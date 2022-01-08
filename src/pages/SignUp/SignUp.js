@@ -1,5 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
@@ -14,7 +15,7 @@ import { default as schema } from "./schema.js";
 export default function SignUp(props) {
 	const { currentUser, authError, isLoading, createUserWithEmailAndPassword, resetAuthError } = useAuth();
 	const navigate = useNavigate();
-	const [errors, setErrors] = useState({});
+	const [errors, setErrors] = useState(null);
 
 	const firstnameRef = useRef();
 	const lastnameRef = useRef();
@@ -41,24 +42,25 @@ export default function SignUp(props) {
 			phone: phoneRef.current.value,
 			password: passwordRef.current.value,
 			passwordConfirm: passwordConfirmRef.current.value,
-		}
+		};
 
-		schema.validate(values, { abortEarly: false }).then(() => {
-			setErrors(() => {});
+		schema
+			.validate(values, { abortEarly: false })
+			.then(() => {
+				createUserWithEmailAndPassword(values);
+			})
+			.catch((validationErrors) => {
+				const errors = {};
 
-			createUserWithEmailAndPassword();
-		}).catch(error => {
+				validationErrors.inner.forEach((validationError) => {
+					errors[validationError.path] = validationError.message;
+				});
 
-			setErrors(() => error)
-		})
+				setErrors(() => errors);
+			});
 	}
 
-	console.log(errors.inner);
-
-// 	name: "ValidationError"
-// path: a string, indicating where there error was thrown. path is empty at the root level.
-// errors: array of error messages
-// inner: in the case of aggregate errors, inner is an array of ValidationErrors throw earlier in the validation chain. When the abortEarly option is false this is where you can 	inspect each error thrown, alternatively, errors 
+	console.log(errors);
 
 	return (
 		<div className="d-flex flex-column vh-100">
@@ -72,33 +74,82 @@ export default function SignUp(props) {
 							<div className="d-flex gap-2">
 								<Form.Group className="flex-grow-1 mb-3">
 									<Form.Label htmlFor="input_firstname">First name</Form.Label>
-									<Form.Control id="input_firstname" type="text" placeholder="John" ref={firstnameRef} />
+									<InputGroup hasValidation>
+										<Form.Control
+											id="input_firstname"
+											type="text"
+											placeholder="John"
+											ref={firstnameRef}
+											isInvalid={Boolean(errors?.firstname)}
+										/>
+										<Form.Control.Feedback type="invalid">{errors?.firstname}</Form.Control.Feedback>
+									</InputGroup>
 								</Form.Group>
 								<Form.Group className="flex-grow-1 mb-3">
 									<Form.Label htmlFor="input_lastname">Last name</Form.Label>
-									<Form.Control id="input_lastname" type="text" placeholder="Doe" ref={lastnameRef} />
+									<InputGroup hasValidation>
+										<Form.Control
+											id="input_lastname"
+											type="text"
+											placeholder="Doe"
+											ref={lastnameRef}
+											isInvalid={Boolean(errors?.lastname)}
+										/>
+										<Form.Control.Feedback type="invalid">{errors?.lastname}</Form.Control.Feedback>
+									</InputGroup>
 								</Form.Group>
 							</div>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_email">Email address</Form.Label>
-								<Form.Control id="input_email" type="text" placeholder="john.doe@mail.com" ref={emailRef} />
+								<InputGroup hasValidation>
+									<Form.Control
+										id="input_email"
+										type="text"
+										placeholder="john.doe@mail.com"
+										ref={emailRef}
+										isInvalid={Boolean(errors?.email)}
+									/>
+									<Form.Control.Feedback type="invalid">{errors?.email}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_phone">Phone number</Form.Label>
-								<Form.Control id="input_phone" type="text" placeholder="+447700000000" ref={phoneRef} />
+								<InputGroup hasValidation>
+									<Form.Control
+										id="input_phone"
+										type="text"
+										placeholder="+447900000000"
+										ref={phoneRef}
+										isInvalid={Boolean(errors?.phone)}
+									/>
+									<Form.Control.Feedback type="invalid">{errors?.phone}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_password">Password</Form.Label>
-								<Form.Control id="input_password" type="password" placeholder="Password" ref={passwordRef} />
+								<InputGroup hasValidation>
+									<Form.Control
+										id="input_password"
+										type="password"
+										placeholder="Password"
+										ref={passwordRef}
+										isInvalid={Boolean(errors?.password)}
+									/>
+									<Form.Control.Feedback type="invalid">{errors?.password}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_password_confirm">Password confirmation</Form.Label>
-								<Form.Control
-									id="input_password_confirm"
-									type="password"
-									ref={passwordConfirmRef}
-									required
-								/>
+								<InputGroup hasValidation>
+									<Form.Control
+										id="input_password_confirm"
+										type="password"
+										placeholder="Password Confirmation"
+										ref={passwordConfirmRef}
+										isInvalid={Boolean(errors?.passwordConfirm)}
+									/>
+									<Form.Control.Feedback type="invalid">{errors?.passwordConfirm}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Button
 								className="w-100 mt-3 d-flex justify-content-center align-items-center gap-2"

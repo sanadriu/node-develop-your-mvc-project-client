@@ -1,47 +1,37 @@
 const actionTypes = {
-	START_LOADING: Symbol(),
+	LOADING: Symbol(),
 	END_LOADING: Symbol(),
 	SUCCESS: Symbol(),
 	ERROR: Symbol(),
 	CLEAR_USER: Symbol(),
 	CLEAR_ERROR: Symbol(),
-	SET_INFO: Symbol(),
 };
 
 function reducer(state, action) {
-	const { type, payload } = action;
-
-	switch (type) {
-		case actionTypes.START_LOADING:
+	switch (action.type) {
+		case actionTypes.LOADING:
 			return {
 				...state,
+				authError: null,
 				isLoading: true,
-			};
-		case actionTypes.END_LOADING:
-			return {
-				...state,
-				isLoading: false,
 			};
 		case actionTypes.SUCCESS:
 			return {
 				...state,
-				currentUser: payload.user,
-			};
-		case actionTypes.SET_INFO:
-			return {
-				...state,
-				info: payload.info,
+				currentUser: action.payload,
+				isLoading: false,
 			};
 		case actionTypes.ERROR:
 			return {
 				...state,
-				authError: payload.error,
+				authError: action.payload,
+				isLoading: false,
 			};
 		case actionTypes.CLEAR_USER:
 			return {
 				...state,
 				currentUser: null,
-				info: null,
+				isLoading: false,
 			};
 		case actionTypes.CLEAR_ERROR:
 			return {
