@@ -1,5 +1,5 @@
-import { useCallback, useReducer } from "react";
-import { getProducts } from "../api";
+import { useReducer } from "react";
+import { createUser } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
 const initialState = {
@@ -8,23 +8,23 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchProducts() {
+export default function useCreateUser() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return [
 		state,
-		useCallback((page) => {
+		async function (token, data) {
+			if (state.status !== "loading");
+
 			dispatch({ type: actionTypes.LOADING });
 
-			const params = { page };
-
-			getProducts(params)
+			await createUser(token, data)
 				.then((response) => {
-					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
+					dispatch({ type: actionTypes.SUCCESS, payload: response });
 				})
 				.catch((error) => {
 					dispatch({ type: actionTypes.ERROR, payload: error });
 				});
-		}, []),
+		},
 	];
 }

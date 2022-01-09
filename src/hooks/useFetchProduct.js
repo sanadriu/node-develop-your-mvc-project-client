@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { getProduct } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
@@ -8,22 +8,25 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchProduct(id) {
+export default function useFetchProduct() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	useEffect(() => {
-		dispatch({ type: actionTypes.LOADING });
+	return [
+		state,
+		useCallback((id) => {
+			if (!id) return dispatch({ type: actionTypes.ERROR, payload: new Error("Product ID is required") });
 
-		const params = { id };
+			dispatch({ type: actionTypes.LOADING });
 
-		getProduct(params)
-			.then((response) => {
-				dispatch({ type: actionTypes.SUCCESS, payload: response.data });
-			})
-			.catch((error) => {
-				dispatch({ type: actionTypes.ERROR, payload: error });
-			});
-	}, [id]);
+			const params = { id };
 
-	return state;
+			getProduct(params)
+				.then((response) => {
+					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
+				})
+				.catch((error) => {
+					dispatch({ type: actionTypes.ERROR, payload: error });
+				});
+		}, []),
+	];
 }

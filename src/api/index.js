@@ -1,5 +1,8 @@
 import axios from "axios";
 
+const abortController = new AbortController();
+const signal = abortController.signal;
+
 export async function syncUser(token, data) {
 	const response = await axios({
 		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
@@ -11,6 +14,7 @@ export async function syncUser(token, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -26,6 +30,7 @@ export async function getUsers(token, params) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		signal,
 	});
 
 	return response;
@@ -43,6 +48,7 @@ export async function getUser(token, params) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		signal,
 	});
 
 	return response;
@@ -57,6 +63,7 @@ export async function createUser(token, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -75,6 +82,7 @@ export async function updateUser(token, params, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -93,6 +101,7 @@ export async function deleteUser(token, params, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -119,6 +128,7 @@ export async function getProduct(params) {
 		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
 		url: `/products/${id}`,
 		method: "GET",
+		signal,
 	});
 
 	return response;
@@ -133,6 +143,7 @@ export async function createProduct(token, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -151,6 +162,7 @@ export async function updateProduct(token, params, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;
@@ -169,6 +181,7 @@ export async function deleteProduct(token, params, data) {
 			Authorization: `Bearer ${token}`,
 		},
 		data,
+		signal,
 	});
 
 	return response;

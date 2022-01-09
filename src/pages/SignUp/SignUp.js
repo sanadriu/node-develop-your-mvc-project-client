@@ -1,21 +1,21 @@
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
-
-import Header from "../../components/Header";
-
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
+import Header from "../../components/Header";
+
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import InputGroup from "react-bootstrap/InputGroup";
+
 import { default as schema } from "./schema.js";
 
 export default function SignUp(props) {
-	const { currentUser, authError, isLoading, createUserWithEmailAndPassword, resetAuthError } = useAuth();
+	const { currentUser, authError, isLoading, signUpWithEmailAndPassword, resetAuthError } = useAuth();
 	const navigate = useNavigate();
-	const [errors, setErrors] = useState(null);
+	const [errors, setErrors] = useState({});
 
 	const firstnameRef = useRef();
 	const lastnameRef = useRef();
@@ -47,8 +47,8 @@ export default function SignUp(props) {
 		schema
 			.validate(values, { abortEarly: false })
 			.then(() => {
-				setErrors(() => null);
-				createUserWithEmailAndPassword(values);
+				setErrors(() => ({}));
+				signUpWithEmailAndPassword(values);
 			})
 			.catch((validationErrors) => {
 				const errors = {};
@@ -71,7 +71,7 @@ export default function SignUp(props) {
 						{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
 							<div className="d-flex gap-2">
-								<Form.Group className="flex-grow-1 mb-3">
+								<Form.Group className="w-50 mb-3">
 									<Form.Label htmlFor="input_firstname">First name</Form.Label>
 									<InputGroup hasValidation>
 										<Form.Control
@@ -84,7 +84,7 @@ export default function SignUp(props) {
 										<Form.Control.Feedback type="invalid">{errors?.firstname}</Form.Control.Feedback>
 									</InputGroup>
 								</Form.Group>
-								<Form.Group className="flex-grow-1 mb-3">
+								<Form.Group className="w-50 mb-3">
 									<Form.Label htmlFor="input_lastname">Last name</Form.Label>
 									<InputGroup hasValidation>
 										<Form.Control
@@ -116,7 +116,7 @@ export default function SignUp(props) {
 								<InputGroup hasValidation>
 									<Form.Control
 										id="input_phone"
-										type="text"
+										type="tel"
 										placeholder="+447900000000"
 										ref={phoneRef}
 										isInvalid={Boolean(errors?.phone)}

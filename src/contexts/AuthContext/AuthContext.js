@@ -1,13 +1,7 @@
 import { createContext, useContext, useReducer, useEffect, useCallback } from "react";
 import { auth } from "../../services/auth";
 import { reducer, actionTypes } from "./reducer";
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	signInWithGoogle,
-	signOut,
-	sendPasswordResetEmail,
-} from "./handlers";
+import { signUpWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "./handlers";
 import { syncUser } from "../../api";
 
 const initialState = {
@@ -29,8 +23,6 @@ function AuthProvider({ children }) {
 
 				syncUser(user.accessToken)
 					.then((response) => {
-						if (!response.data?.success) return Promise.reject("Could not sync user with DB");
-
 						const details = response.data.data;
 						const currentUser = {
 							...user,
@@ -56,14 +48,11 @@ function AuthProvider({ children }) {
 		currentUser,
 		authError,
 		isLoading,
-		createUserWithEmailAndPassword: useCallback((data) => {
-			createUserWithEmailAndPassword(dispatch, data);
+		signUpWithEmailAndPassword: useCallback((data) => {
+			signUpWithEmailAndPassword(dispatch, data);
 		}, []),
 		signInWithEmailAndPassword: useCallback((email, password) => {
 			signInWithEmailAndPassword(dispatch, email, password);
-		}, []),
-		signInWithGoogle: useCallback(() => {
-			signInWithGoogle(dispatch);
 		}, []),
 		signOut: useCallback(() => {
 			signOut(dispatch);

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { getUsers } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
@@ -8,15 +8,18 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchUsers(token, page) {
+export default function useFetchUsers() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	useEffect(() => {
-		dispatch({ type: actionTypes.LOADING });
+	return [
+		state,
+		useCallback((token, page) => {
+			if (!token) return dispatch({ type: actionTypes.ERROR, payload: new Error("Access token is required") });
 
-		const params = { page };
+			dispatch({ type: actionTypes.LOADING });
 
-		if (token) {
+			const params = { page };
+
 			getUsers(token, params)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
@@ -24,10 +27,6 @@ export default function useFetchUsers(token, page) {
 				.catch((error) => {
 					dispatch({ type: actionTypes.ERROR, payload: error });
 				});
-		} else {
-			dispatch({ type: actionTypes.ERROR, payload: new Error("Access token is required") });
-		}
-	}, [token, page]);
-
-	return state;
+		}, []),
+	];
 }

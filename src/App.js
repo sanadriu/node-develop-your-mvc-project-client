@@ -8,6 +8,7 @@ import Product from "./pages/Product/";
 import Dashboard from "./pages/Dashboard";
 import UserList from "./components/UserList";
 import ProductList from "./components/ProductList";
+import UserForm from "./components/UserForm";
 
 function App() {
 	return (
@@ -21,7 +22,11 @@ function App() {
 					<Route path="/sign-out" element={<SignOut />} />
 					<Route path="/dashboard" element={<Dashboard />}>
 						<Route path="users" element={<UserList />} />
+						<Route path="users/:idUser" element={<div>User</div>} />
+						<Route path="users/new" element={<UserForm />} />
 						<Route path="products" element={<ProductList />} />
+						<Route path="products/:idProduct" element={<div>Product</div>} />
+						<Route path="products/new" element={<div>New Product</div>} />
 					</Route>
 					<Route path="/product/:idProduct" element={<Product />} />
 				</Routes>

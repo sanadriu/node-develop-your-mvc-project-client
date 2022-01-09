@@ -25,8 +25,7 @@ export default function Header(props) {
 							)}
 							{currentUser && (
 								<>
-									{/* {["admin", "main-admin"].includes(currentUser?.role) && <NavLink to="/dashboard">Dashboard</NavLink>} */}
-									<NavLink to="/dashboard">Dashboard</NavLink>
+									{["admin", "main-admin"].includes(currentUser?.role) && <NavLink to="/dashboard">Dashboard</NavLink>}
 									<NavLink to="/account">Account</NavLink>
 									<NavLink to="/sign-out">Sign Out</NavLink>
 								</>

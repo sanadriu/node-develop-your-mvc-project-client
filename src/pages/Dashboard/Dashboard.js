@@ -1,3 +1,5 @@
+import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
@@ -8,13 +10,13 @@ import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Dashboard(props) {
-	// const { currentUser: accessToken } = useAuth();
+	const { currentUser } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	// useEffect(() => {
-	// 	if (currentUser) navigate("/home", { replace: true });
-	// }, [currentUser, navigate]);
+	useEffect(() => {
+		if (!["admin", "main-admin"].includes(currentUser?.role)) navigate("/home", { replace: true });
+	}, [currentUser, navigate]);
 
 	return (
 		<Container className="d-flex flex-column min-vh-100 p-0" fluid>

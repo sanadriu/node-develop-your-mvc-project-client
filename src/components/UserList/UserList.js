@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchUsers } from "../../hooks";
 import { useAuth } from "../../contexts/AuthContext";
 
 import NavPagination from "../NavPagination";
-import { DeleteIcon, EditIcon } from "../Icons";
+import { AddIcon, DeleteIcon, EditIcon } from "../Icons";
 
 import Error from "../../components/Error";
 import Spinner from "react-bootstrap/Spinner";
@@ -17,11 +17,15 @@ export default function UserList(props) {
 	const navigate = useNavigate();
 	const { currentUser } = useAuth();
 
-	const { response, status, error } = useFetchUsers(currentUser?.accessToken, currentPage);
+	const [{ response, status, error }, getUsers] = useFetchUsers();
 	const { data: users, lastPage } = response;
 
+	useEffect(() => {
+		getUsers(currentUser?.accessToken, currentPage);
+	}, [getUsers, currentUser, currentPage]);
+
 	return (
-		<>
+		<Container as="main">
 			{status === "loading" && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
@@ -30,7 +34,12 @@ export default function UserList(props) {
 			{status === "success" && users && (
 				<>
 					<Container className="mb-3">
-						<h1 className="fw-light m-0">Users</h1>
+						<div className="d-flex justify-content-between align-items-center">
+							<h1 className="fw-light m-0">Users</h1>
+							<Button variant="outline-secondary" onClick={() => navigate("new")}>
+								<AddIcon />
+							</Button>
+						</div>
 						<hr className="mt-2 mb-3" />
 						<ListGroup as="ul">
 							{users.map((user) => (
@@ -47,7 +56,7 @@ export default function UserList(props) {
 											<Button variant="outline-secondary" onClick={() => navigate(user._id)}>
 												<EditIcon />
 											</Button>
-											<Button variant="outline-secondary">
+											<Button variant="outline-secondary" onClick={() => {}}>
 												<DeleteIcon />
 											</Button>
 										</div>
@@ -62,6 +71,6 @@ export default function UserList(props) {
 				</>
 			)}
 			{status === "error" && <Error message={error.message} />}
-		</>
+		</Container>
 	);
 }

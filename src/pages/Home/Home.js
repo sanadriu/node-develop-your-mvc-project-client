@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetchProducts } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
+import Error from "../../components/Error";
 import NavPagination from "../../components/NavPagination";
 
 import Spinner from "react-bootstrap/Spinner";
@@ -10,14 +11,16 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import Error from "../../components/Error";
-
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const navigate = useNavigate();
 
-	const { response, status, error } = useFetchProducts(currentPage);
+	const [{ response, status, error }, getProducts] = useFetchProducts();
 	const { data: products, lastPage } = response;
+
+	useEffect(() => {
+		getProducts(currentPage);
+	}, [getProducts, currentPage]);
 
 	return (
 		<Container className="d-flex flex-column min-vh-100 p-0" fluid>

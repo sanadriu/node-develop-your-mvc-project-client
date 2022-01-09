@@ -1,12 +1,13 @@
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Header from "../../components/Header";
-import Alert from "react-bootstrap/Alert";
-
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+
+import Header from "../../components/Header";
+
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 export default function SignIn(props) {
 	const { currentUser, authError, isLoading, signInWithEmailAndPassword, resetAuthError } = useAuth();

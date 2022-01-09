@@ -1,2 +1,3 @@
-export { default as DeleteIcon } from "./DeleteIcon/DeleteIcon";
-export { default as EditIcon } from "./EditIcon/EditIcon";
+export { default as DeleteIcon } from "./DeleteIcon";
+export { default as EditIcon } from "./EditIcon";
+export { default as AddIcon } from "./AddIcon";

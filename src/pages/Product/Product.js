@@ -2,25 +2,31 @@ import useFetchProduct from "../../hooks/useFetchProduct";
 import { useParams } from "react-router-dom";
 
 import Header from "../../components/Header";
+import Error from "../../components/Error";
 import defaultImage from "../../images/no-fotos.png";
 
 import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useEffect } from "react";
 
 export default function Product() {
 	const { idProduct } = useParams();
 
-	const { response, status } = useFetchProduct(idProduct);
-	const { success, data: product, message } = response;
+	const [{ response, status, error }, getProduct] = useFetchProduct(idProduct);
+	const { data: product } = response;
+
+	useEffect(() => {
+		getProduct(idProduct);
+	}, [getProduct, idProduct]);
 
 	return (
 		<div className="d-flex flex-column min-vh-100">
 			<Header />
 			<main className="d-flex flex-basis-1 p-2">
 				{status === "loading" && <Spinner animation="border" role="status" />}
-				{status === "success" && success && (
+				{status === "success" && product && (
 					<Container className="d-flex justify-content-center align-items-center" fluid="md">
 						<Row>
 							<Col xs={12} sm={4} lg={3} className="d-flex flex-column justify-content-center align-items-center p-3">
@@ -51,8 +57,7 @@ export default function Product() {
 						</Row>
 					</Container>
 				)}
-				{status === "error" && !success && <p>{message}</p>}
-				{status === "error" && <p>Something went wrong :(</p>}
+				{status === "error" && <Error message={error.message} />}
 			</main>
 		</div>
 	);
