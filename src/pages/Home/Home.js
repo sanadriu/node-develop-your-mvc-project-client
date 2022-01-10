@@ -6,6 +6,7 @@ import NavPagination from "../../components/NavPagination";
 
 import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
+import ProductCard from "../../components/ProductCard/ProductCard";
 
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +23,14 @@ export default function Home(props) {
 					{status === "success" && success && (
 						<div className="">
 							{products.map((product) => (
-								<p key={product._id}>{product.title}</p>
+								<ProductCard
+									title= {product.title}
+									description= {product.description}
+									price= {product.price} 
+									stock={product.stock} 
+									images= {product.images} 
+									
+								/>	
 							))}
 							<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
 						</div>
