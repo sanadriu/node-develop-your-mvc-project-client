@@ -7,7 +7,7 @@ export default function ProductCard(props) {
 	return (
 		<>
 			<div className="card">
-				<img className={`card-top-img ${styles.img}`} src={images} alt="Card" />
+				<img className={`card-top-img p-4 ${styles.img}`} src={images} alt="Card" />
 				<div className={`card-body d-flex flex-column justify-content-between ${styles.body}`}>
 					<div>
 						<h4 className="card-title fs-5 fw-normal">{title}</h4>

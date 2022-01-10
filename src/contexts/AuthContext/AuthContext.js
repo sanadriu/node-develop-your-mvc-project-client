@@ -57,8 +57,8 @@ function AuthProvider({ children }) {
 		signOut: useCallback(() => {
 			signOut(dispatch);
 		}, []),
-		sendPasswordResetEmail: useCallback(() => {
-			sendPasswordResetEmail(dispatch);
+		sendPasswordResetEmail: useCallback((email) => {
+			sendPasswordResetEmail(dispatch, email);
 		}, []),
 		setAuthError: useCallback((message) => {
 			dispatch({ type: actionTypes.ERROR, payload: { error: new Error(message) } });

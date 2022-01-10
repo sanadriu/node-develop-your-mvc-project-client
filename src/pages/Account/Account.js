@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
-export default function Dashboard(props) {
+export default function Account(props) {
 	const { currentUser } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -27,22 +27,22 @@ export default function Dashboard(props) {
 						<ListGroup as="ul">
 							<ListGroup.Item
 								as="li"
-								onClick={() => navigate("users")}
-								active={location.pathname === "/dashboard/users"}
+								onClick={() => navigate("security")}
+								active={location.pathname === "/account/security"}
 							>
-								Users
+								Security
 							</ListGroup.Item>
 							<ListGroup.Item
 								as="li"
-								onClick={() => navigate("products")}
-								active={location.pathname === "/dashboard/products"}
+								onClick={() => navigate("addresses")}
+								active={location.pathname === "/account/addresses"}
 							>
-								Products
+								Addresses
 							</ListGroup.Item>
 							<ListGroup.Item
 								as="li"
-								onClick={() => navigate("orders")}
-								active={location.pathname === "/dashboard/orders"}
+								onClick={() => navigate("order")}
+								active={location.pathname === "/account/orders"}
 							>
 								Orders
 							</ListGroup.Item>

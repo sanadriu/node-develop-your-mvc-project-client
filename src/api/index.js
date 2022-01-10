@@ -88,7 +88,7 @@ export async function updateUser(token, params, data) {
 	return response;
 }
 
-export async function deleteUser(token, params, data) {
+export async function deleteUser(token, params) {
 	const { id = undefined } = params;
 
 	if (!id) throw new Error("User ID is required");
@@ -100,7 +100,6 @@ export async function deleteUser(token, params, data) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
-		data,
 		signal,
 	});
 
@@ -168,7 +167,7 @@ export async function updateProduct(token, params, data) {
 	return response;
 }
 
-export async function deleteProduct(token, params, data) {
+export async function deleteProduct(token, params) {
 	const { id = undefined } = params;
 
 	if (!id) throw new Error("Product ID is required");
@@ -180,7 +179,22 @@ export async function deleteProduct(token, params, data) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
-		data,
+		signal,
+	});
+
+	return response;
+}
+
+export async function getOrders(token, params) {
+	const { page = 1 } = params;
+
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: `/orders?page=${page}`,
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 		signal,
 	});
 

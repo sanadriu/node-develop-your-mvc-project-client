@@ -55,6 +55,7 @@ export default function SignIn(props) {
 								variant="primary"
 								size="sm"
 								type="submit"
+								disabled={isLoading}
 							>
 								<span>Sign In</span>
 								{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}

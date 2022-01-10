@@ -58,8 +58,6 @@ export async function signOut(dispatch) {
 }
 
 export async function sendPasswordResetEmail(dispatch, email) {
-	dispatch({ type: actionTypes.LOADING });
-
 	try {
 		await Auth.sendPasswordResetEmail(email);
 	} catch (error) {

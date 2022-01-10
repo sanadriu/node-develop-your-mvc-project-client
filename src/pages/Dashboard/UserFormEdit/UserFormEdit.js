@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { useAuth } from "../../contexts/AuthContext";
-import { useFetchUser, useUpdateUser } from "../../hooks";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useFetchUser, useUpdateUser } from "../../../hooks";
 import schema from "./schema";
 
-import Error from "../Error";
+import Error from "../../../components/Error";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -17,20 +17,10 @@ import Spinner from "react-bootstrap/Spinner";
 export default function UserFormEdit(props) {
 	const { idUser } = useParams();
 	const { currentUser } = useAuth();
-	const [{ status: getStatus, error: getError, response: getResponse }, getUser] = useFetchUser();
+	const [{ status: getStatus, error: getError, response }, getUser] = useFetchUser();
 	const [{ status: updateStatus, error: updateError }, updateUser] = useUpdateUser();
-	const { data: user } = getResponse;
+	const { data: user } = response;
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		getUser(currentUser?.accessToken, idUser);
-	}, [getUser, currentUser, idUser]);
-
-	useEffect(() => {
-		if (updateStatus === "success") {
-			setTimeout(() => navigate("./.."), 2000);
-		}
-	}, [navigate, updateStatus]);
 
 	const formik = useFormik({
 		initialValues: {
@@ -49,6 +39,16 @@ export default function UserFormEdit(props) {
 		},
 	});
 
+	useEffect(() => {
+		getUser(currentUser?.accessToken, idUser);
+	}, [getUser, currentUser, idUser]);
+
+	useEffect(() => {
+		if (updateStatus === "success") {
+			setTimeout(() => navigate("./.."), 2000);
+		}
+	}, [navigate, updateStatus]);
+
 	const {
 		values,
 		errors,
@@ -65,7 +65,11 @@ export default function UserFormEdit(props) {
 
 	return (
 		<Container as="main">
-			{getStatus === "loading" && <Spinner animation="border" role="status" />}
+			{getStatus === "loading" && (
+				<Container className="d-flex align-items-center justify-content-center h-100">
+					<Spinner animation="border" role="status" />
+				</Container>
+			)}
 			{getStatus === "success" && user && (
 				<>
 					<div className="d-flex justify-content-between align-items-center">

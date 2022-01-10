@@ -6,10 +6,13 @@ import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
 import Dashboard from "./pages/Dashboard";
-import UserList from "./components/UserList";
-import ProductList from "./components/ProductList";
-import UserFormCreate from "./components/UserFormCreate";
-import UserFormEdit from "./components/UserFormEdit";
+import Account from "./pages/Account";
+import SecurityForm from "./pages/Account/SecurityForm";
+import UserList from "./pages/Dashboard/UserList";
+import ProductList from "./pages/Dashboard/ProductList";
+import UserFormCreate from "./pages/Dashboard/UserFormCreate";
+import UserFormEdit from "./pages/Dashboard/UserFormEdit";
+import OrderList from "./pages/Dashboard/OrderList";
 
 function App() {
 	return (
@@ -21,6 +24,9 @@ function App() {
 					<Route path="/sign-up" element={<SignUp />} />
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
+					<Route path="/account" element={<Account />}>
+						<Route path="security" element={<SecurityForm />} />
+					</Route>
 					<Route path="/dashboard" element={<Dashboard />}>
 						<Route path="users" element={<UserList />} />
 						<Route path="users/:idUser" element={<UserFormEdit />} />
@@ -28,6 +34,7 @@ function App() {
 						<Route path="products" element={<ProductList />} />
 						<Route path="products/:idProduct" element={<div>Product</div>} />
 						<Route path="products/new" element={<div>New Product</div>} />
+						<Route path="orders" element={<OrderList />} />
 					</Route>
 					<Route path="/product/:idProduct" element={<Product />} />
 				</Routes>

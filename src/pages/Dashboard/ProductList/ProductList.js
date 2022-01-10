@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFetchProducts } from "../../hooks";
+import { useFetchProducts } from "../../../hooks";
 
-import NavPagination from "../NavPagination";
-import { AddIcon, DeleteIcon, EditIcon } from "../Icons";
+import Error from "../../../components/Error";
+import NavPagination from "../../../components/NavPagination";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../components/Icons";
 
-import Error from "../Error";
 import Spinner from "react-bootstrap/Spinner";
 import ListGroup from "react-bootstrap/ListGroup";
 import Container from "react-bootstrap/Container";
@@ -41,17 +41,22 @@ export default function ProductList(props) {
 						<hr className="mt-2 mb-3" />
 						<ListGroup as="ul">
 							{products.map((product) => (
-								<ListGroup.Item as="li" xs={12} sm={6} md={3} key={product._id}>
-									<div className="d-flex justify-content-between align-items-center">
-										<span className="fw-light">{product.title}</span>
-										<div className="d-flex gap-2">
-											<Button variant="outline-secondary" onClick={() => navigate(product._id)}>
-												<EditIcon />
-											</Button>
-											<Button variant="outline-secondary" onClick={() => {}}>
-												<DeleteIcon />
-											</Button>
-										</div>
+								<ListGroup.Item
+									className="d-flex justify-content-between align-items-center"
+									as="li"
+									xs={12}
+									sm={6}
+									md={3}
+									key={product._id}
+								>
+									<span className="fw-light">{product.title}</span>
+									<div className="d-flex gap-2">
+										<Button variant="outline-secondary" onClick={() => navigate(product._id)}>
+											<EditIcon />
+										</Button>
+										<Button variant="outline-secondary" onClick={() => {}}>
+											<DeleteIcon />
+										</Button>
 									</div>
 								</ListGroup.Item>
 							))}

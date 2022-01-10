@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
-import { useAuth } from "../../contexts/AuthContext";
-import { useCreateUser } from "../../hooks";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useCreateUser } from "../../../hooks";
 import schema from "./schema";
 
 import Form from "react-bootstrap/Form";
@@ -15,13 +15,6 @@ export default function UserFormCreate(props) {
 	const { currentUser } = useAuth();
 	const [{ status, error }, createUser] = useCreateUser();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		if (status === "success") {
-			setTimeout(() => navigate("./.."), 2000);
-		}
-	}, [navigate, status]);
-
 	const formik = useFormik({
 		initialValues: {
 			role: "",
@@ -40,6 +33,12 @@ export default function UserFormCreate(props) {
 			createUser(currentUser?.accessToken, values).finally(() => setSubmitting(false));
 		},
 	});
+
+	useEffect(() => {
+		if (status === "success") {
+			setTimeout(() => navigate("./.."), 2000);
+		}
+	}, [navigate, status]);
 
 	const { values, errors, touched, isValid, isValidating, isSubmitting, handleBlur, handleChange, handleSubmit } =
 		formik;
