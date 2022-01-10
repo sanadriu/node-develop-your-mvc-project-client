@@ -24,8 +24,6 @@ export default function OrderList() {
 		getOrders(currentUser?.accessToken, currentPage);
 	}, [getOrders, currentUser, currentPage]);
 
-	console.log(response);
-
 	return (
 		<Container as="main">
 			{status === "loading" && (
@@ -69,8 +67,8 @@ export default function OrderList() {
 											<span className="fw-light">{order.products.length}</span>
 										</div>
 									</div>
-									<Button variant="outline-secondary" className="m-3" onClick={() => {}}>
-										<DetailsIcon onClick={() => navigate(order._id)} />
+									<Button variant="outline-secondary" className="m-3" onClick={() => navigate(order._id)}>
+										<DetailsIcon />
 									</Button>
 								</ListGroup.Item>
 							))}

@@ -55,7 +55,7 @@ export default function UserList(props) {
 						</div>
 						<hr className="mt-2 mb-3" />
 						{deleteStatus === "error" && <Alert variant="danger text-center">{deleteError.message}</Alert>}
-						{deleteStatus === "success" && <Alert variant="success text-center">User updated successfully</Alert>}
+						{deleteStatus === "success" && <Alert variant="success text-center">User deleted successfully</Alert>}
 						<ListGroup as="ul">
 							{users.map((user) => (
 								<ListGroup.Item

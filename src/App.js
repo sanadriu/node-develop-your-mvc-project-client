@@ -13,6 +13,7 @@ import ProductList from "./pages/Dashboard/ProductList";
 import UserFormCreate from "./pages/Dashboard/UserFormCreate";
 import UserFormEdit from "./pages/Dashboard/UserFormEdit";
 import OrderList from "./pages/Dashboard/OrderList";
+import OrderDetails from "./pages/Dashboard/OrderDetails";
 
 function App() {
 	return (
@@ -35,6 +36,7 @@ function App() {
 						<Route path="products/:idProduct" element={<div>Product</div>} />
 						<Route path="products/new" element={<div>New Product</div>} />
 						<Route path="orders" element={<OrderList />} />
+						<Route path="orders/:idOrder" element={<OrderDetails />} />
 					</Route>
 					<Route path="/product/:idProduct" element={<Product />} />
 				</Routes>

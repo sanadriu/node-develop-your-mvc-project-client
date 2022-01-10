@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from "react";
-import { getUser } from "../api";
+import { getOrder } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
 const initialState = {
@@ -21,7 +21,7 @@ export default function useFetchOrder() {
 
 			const params = { id };
 
-			await getUser(token, params)
+			await getOrder(token, params)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
 				})

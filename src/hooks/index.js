@@ -5,5 +5,5 @@ export { default as useFetchUsers } from "./useFetchUsers";
 export { default as useCreateUser } from "./useCreateUser";
 export { default as useUpdateUser } from "./useUpdateUser";
 export { default as useDeleteUser } from "./useDeleteUser";
-export { default as useFetchOrder } from "./useFetchOrders";
+export { default as useFetchOrder } from "./useFetchOrder";
 export { default as useFetchOrders } from "./useFetchOrders";

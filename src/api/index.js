@@ -200,3 +200,19 @@ export async function getOrders(token, params) {
 
 	return response;
 }
+
+export async function getOrder(token, params) {
+	const { id = 1 } = params;
+
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: `/orders/${id}`,
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		signal,
+	});
+
+	return response;
+}

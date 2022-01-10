@@ -23,7 +23,7 @@ export default function Dashboard(props) {
 			<Header />
 			<Container as="main" className="d-flex flex-column flex-grow-1 p-3">
 				<Row>
-					<Col xs={12} sm={4} lg={3} className="p-1">
+					<Col xs={12} md={4} lg={3} className="p-1 mb-3">
 						<ListGroup as="ul">
 							<ListGroup.Item
 								as="li"
@@ -48,7 +48,7 @@ export default function Dashboard(props) {
 							</ListGroup.Item>
 						</ListGroup>
 					</Col>
-					<Col xs={12} sm={8} lg={9} className="p-1">
+					<Col xs={12} md={8} lg={9} className="p-1 mb-3">
 						<Outlet />
 					</Col>
 				</Row>

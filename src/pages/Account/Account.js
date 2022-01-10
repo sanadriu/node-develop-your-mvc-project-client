@@ -23,7 +23,7 @@ export default function Account(props) {
 			<Header />
 			<Container as="main" className="d-flex flex-column flex-grow-1 p-3">
 				<Row>
-					<Col xs={12} sm={4} lg={3} className="p-1">
+					<Col xs={12} md={4} lg={3} className="p-1 mb-3">
 						<ListGroup as="ul">
 							<ListGroup.Item
 								as="li"
@@ -34,21 +34,14 @@ export default function Account(props) {
 							</ListGroup.Item>
 							<ListGroup.Item
 								as="li"
-								onClick={() => navigate("addresses")}
-								active={location.pathname === "/account/addresses"}
-							>
-								Addresses
-							</ListGroup.Item>
-							<ListGroup.Item
-								as="li"
-								onClick={() => navigate("order")}
+								onClick={() => navigate("orders")}
 								active={location.pathname === "/account/orders"}
 							>
 								Orders
 							</ListGroup.Item>
 						</ListGroup>
 					</Col>
-					<Col xs={12} sm={8} lg={9} className="p-1">
+					<Col xs={12} md={8} lg={9} className="p-1 mb-3">
 						<Outlet />
 					</Col>
 				</Row>
