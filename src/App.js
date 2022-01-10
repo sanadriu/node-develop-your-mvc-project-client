@@ -5,6 +5,8 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
+import CreateProduct from "./components/ProductCard/CreateProduct";
+
 
 function App() {
 	return (
@@ -17,6 +19,7 @@ function App() {
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
 					<Route path="/product" element={<Product />} />
+					<Route path="/createproduct" element={< CreateProduct/>} />
 				</Routes>
 			</BrowserRouter>
 		</AuthProvider>
