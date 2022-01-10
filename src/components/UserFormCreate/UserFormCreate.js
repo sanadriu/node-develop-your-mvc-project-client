@@ -8,10 +8,19 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function UserForm(props) {
+export default function UserFormCreate(props) {
 	const { currentUser } = useAuth();
 	const [{ status, error }, createUser] = useCreateUser();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (status === "success") {
+			setTimeout(() => navigate("./.."), 2000);
+		}
+	}, [navigate, status]);
 
 	const formik = useFormik({
 		initialValues: {
@@ -28,7 +37,7 @@ export default function UserForm(props) {
 			const { setSubmitting } = actions;
 
 			setSubmitting(true);
-			createUser(currentUser?.accessToken, values).then(() => setSubmitting(false));
+			createUser(currentUser?.accessToken, values).finally(() => setSubmitting(false));
 		},
 	});
 
@@ -40,6 +49,7 @@ export default function UserForm(props) {
 			<h1 className="fw-light m-0">Create user</h1>
 			<hr className="mt-2 mb-3" />
 			{status === "error" && <Alert variant="danger text-center">{error.message}</Alert>}
+			{status === "success" && <Alert variant="success text-center">User created successfully</Alert>}
 			<Form className="p-4" onSubmit={handleSubmit}>
 				<div className="d-flex gap-2">
 					<Form.Group className="w-50 mb-3">

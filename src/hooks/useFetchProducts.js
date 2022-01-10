@@ -13,12 +13,12 @@ export default function useFetchProducts() {
 
 	return [
 		state,
-		useCallback((page) => {
+		useCallback(async (page) => {
 			dispatch({ type: actionTypes.LOADING });
 
 			const params = { page };
 
-			getProducts(params)
+			await getProducts(params)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
 				})

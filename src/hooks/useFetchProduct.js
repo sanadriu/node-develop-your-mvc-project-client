@@ -13,14 +13,14 @@ export default function useFetchProduct() {
 
 	return [
 		state,
-		useCallback((id) => {
+		useCallback(async (id) => {
 			if (!id) return dispatch({ type: actionTypes.ERROR, payload: new Error("Product ID is required") });
 
 			dispatch({ type: actionTypes.LOADING });
 
 			const params = { id };
 
-			getProduct(params)
+			await getProduct(params)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
 				})

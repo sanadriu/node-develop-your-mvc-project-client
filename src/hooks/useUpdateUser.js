@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from "react";
-import { getUsers } from "../api";
+import { updateUser } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
 const initialState = {
@@ -8,19 +8,20 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchUsers() {
+export default function useUpdateUser() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return [
 		state,
-		useCallback(async (token, page) => {
+		useCallback(async (token, id, data) => {
 			if (!token) return dispatch({ type: actionTypes.ERROR, payload: new Error("Access token is required") });
+			if (!id) return dispatch({ type: actionTypes.ERROR, payload: new Error("User ID is required") });
 
 			dispatch({ type: actionTypes.LOADING });
 
-			const params = { page };
+			const params = { id };
 
-			await getUsers(token, params)
+			await updateUser(token, params, data)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
 				})

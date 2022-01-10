@@ -1,5 +1,6 @@
-import useFetchProduct from "../../hooks/useFetchProduct";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import useFetchProduct from "../../hooks/useFetchProduct";
 
 import Header from "../../components/Header";
 import Error from "../../components/Error";
@@ -9,7 +10,6 @@ import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useEffect } from "react";
 
 export default function Product() {
 	const { idProduct } = useParams();
@@ -25,7 +25,11 @@ export default function Product() {
 		<div className="d-flex flex-column min-vh-100">
 			<Header />
 			<main className="d-flex flex-basis-1 p-2">
-				{status === "loading" && <Spinner animation="border" role="status" />}
+				{status === "loading" && (
+					<Container className="d-flex align-items-center justify-content-center flex-grow-1">
+						<Spinner animation="border" role="status" />
+					</Container>
+				)}
 				{status === "success" && product && (
 					<Container className="d-flex justify-content-center align-items-center" fluid="md">
 						<Row>
