@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useFetchProducts } from "../../hooks";
-import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
 import Error from "../../components/Error";
 import NavPagination from "../../components/NavPagination";
+import ProductCard from "../../components/ProductCard/ProductCard";
 
 import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
@@ -13,7 +13,6 @@ import Container from "react-bootstrap/Container";
 
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
-	const navigate = useNavigate();
 
 	const [{ response, status, error }, getProducts] = useFetchProducts();
 	const { data: products, lastPage } = response;
@@ -36,16 +35,8 @@ export default function Home(props) {
 						<Container className="p-5 flex-grow-1">
 							<Row>
 								{products.map((product) => (
-									<Col xs={12} sm={6} md={3} key={product._id}>
-										<p
-											className="text-center border p-3"
-											style={{ cursor: "pointer" }}
-											onClick={() => {
-												navigate(`/product/${product._id}`);
-											}}
-										>
-											{product.title}
-										</p>
+									<Col className="mb-4" xs={12} md={6} xl={4} key={product._id}>
+										<ProductCard {...product} />
 									</Col>
 								))}
 							</Row>
