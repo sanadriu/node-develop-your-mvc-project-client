@@ -6,7 +6,6 @@ import Header from "../Header";
 import { Container, InputGroup } from "react-bootstrap";
 import { useFormik } from "formik";
 import createProductSchema from "./schema";
-import Cart from "../Cart";
 
 
 export default function CreateProduct(props) {
@@ -114,8 +113,6 @@ export default function CreateProduct(props) {
                     </Form>
                 </Container>
             </main>
-            <Cart/>
         </div>
-
     </>)
 }

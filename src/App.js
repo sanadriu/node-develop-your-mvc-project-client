@@ -5,10 +5,8 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
-<<<<<<< HEAD
 import CreateProduct from "./components/ProductCard/CreateProduct";
 
-=======
 import Checkout from "./pages/Checkout";
 
 import Dashboard from "./pages/Dashboard";
@@ -20,7 +18,6 @@ import UserFormCreate from "./pages/Dashboard/UserFormCreate";
 import UserFormEdit from "./pages/Dashboard/UserFormEdit";
 import OrderList from "./pages/Dashboard/OrderList";
 import OrderDetails from "./pages/Dashboard/OrderDetails";
->>>>>>> 67bc3e7d174242b72b91a745d726ca5dad83d144
 
 function App() {
 	return (
@@ -33,9 +30,7 @@ function App() {
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
 					<Route path="/product" element={<Product />} />
-<<<<<<< HEAD
 					<Route path="/createproduct" element={< CreateProduct/>} />
-=======
 					<Route path="/checkout" element={<Checkout />} />
 					<Route path="/account" element={<Account />}>
 						<Route path="security" element={<SecurityForm />} />
@@ -51,7 +46,6 @@ function App() {
 						<Route path="orders/:idOrder" element={<OrderDetails />} />
 					</Route>
 					<Route path="/product/:idProduct" element={<Product />} />
->>>>>>> 67bc3e7d174242b72b91a745d726ca5dad83d144
 				</Routes>
 			</BrowserRouter>
 		</AuthProvider>

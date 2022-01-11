@@ -10,6 +10,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import Cart from "../../components/Cart/Cart";
 
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ export default function Home(props) {
 		getProducts(currentPage);
 	}, [getProducts, currentPage]);
 
-	return (
+	return (<>
 		<Container className="d-flex flex-column min-vh-100 p-0" fluid>
 			<Header />
 			<Container as="main" className="d-flex flex-column justify-content-center flex-grow-1">
@@ -49,6 +50,8 @@ export default function Home(props) {
 				{status === "error" && <Error message={error.message} />}
 			</Container>
 		</Container>
+		<Cart />
+		</>
 	);
 }
 
