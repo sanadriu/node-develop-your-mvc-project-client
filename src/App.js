@@ -6,7 +6,8 @@ import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
 import Checkout from "./pages/Checkout";
-
+import CheckoutAddress from "./components/CheckoutAddress";
+import CheckoutPayment from "./components/CheckoutPayment";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import SecurityForm from "./pages/Account/SecurityForm";
@@ -28,7 +29,12 @@ function App() {
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
 					<Route path="/product" element={<Product />} />
-					<Route path="/checkout" element={<Checkout />} />
+					<Route path="/checkout" element={<Checkout />}>
+						<Route path="" element={<Navigate to="1" />} />
+						<Route path="1" element={<CheckoutAddress />} />
+						<Route path="2" element={<CheckoutPayment />} />
+						<Route path="3" element={<div>Resumen reshulón</div>} />
+					</Route>
 					<Route path="/account" element={<Account />}>
 						<Route path="security" element={<SecurityForm />} />
 					</Route>
