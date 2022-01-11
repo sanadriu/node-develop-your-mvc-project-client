@@ -5,6 +5,8 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
+import Checkout from "./pages/Checkout";
+
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import SecurityForm from "./pages/Account/SecurityForm";
@@ -25,6 +27,8 @@ function App() {
 					<Route path="/sign-up" element={<SignUp />} />
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
+					<Route path="/product" element={<Product />} />
+					<Route path="/checkout" element={<Checkout />} />
 					<Route path="/account" element={<Account />}>
 						<Route path="security" element={<SecurityForm />} />
 					</Route>
