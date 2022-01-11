@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { getProducts } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
@@ -8,22 +8,23 @@ const initialState = {
 	response: {},
 };
 
-export default function useFetchProducts(page = 1) {
+export default function useFetchProducts() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	useEffect(() => {
-		dispatch({ type: actionTypes.LOADING });
+	return [
+		state,
+		useCallback(async (page) => {
+			dispatch({ type: actionTypes.LOADING });
 
-		const params = { page };
+			const params = { page };
 
-		getProducts(params)
-			.then((response) => {
-				dispatch({ type: actionTypes.SUCCESS, payload: response.data });
-			})
-			.catch((error) => {
-				dispatch({ type: actionTypes.ERROR, payload: error });
-			});
-	}, [page]);
-
-	return state;
+			await getProducts(params)
+				.then((response) => {
+					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
+				})
+				.catch((error) => {
+					dispatch({ type: actionTypes.ERROR, payload: error });
+				});
+		}, []),
+	];
 }

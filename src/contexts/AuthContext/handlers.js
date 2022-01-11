@@ -1,84 +1,66 @@
+import { syncUser } from "../../api";
 import * as Auth from "../../services/auth";
-import * as Api from "../../api";
 import { actionTypes } from "./reducer";
 
-const signInWithEmailAndPassword = async (dispatch, email, password) => {
-	dispatch({ type: actionTypes.CLEAR_ERROR });
-	dispatch({ type: actionTypes.START_LOADING });
+export async function signUpWithEmailAndPassword(dispatch, data) {
+	dispatch({ type: actionTypes.LOADING });
+
+	const { email, password, ...details } = data;
 
 	try {
-		await Auth.signInWithEmailAndPassword(email, password);
+		const { user } = await Auth.signUpWithEmailAndPassword(email, password);
+		const response = await syncUser(user.accessToken, details).catch((error) => {
+			Auth.deleteUser(user);
+
+			return Promise.reject(error);
+		});
+
+		const currentUser = {
+			...user,
+			...response.data.data,
+		};
+
+		dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
 	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: { error } });
+		dispatch({ type: actionTypes.ERROR, payload: error });
 	}
+}
 
-	dispatch({ type: actionTypes.END_LOADING });
-};
-
-const signInWithGoogle = async (dispatch) => {
-	dispatch({ type: actionTypes.CLEAR_ERROR });
-	dispatch({ type: actionTypes.START_LOADING });
+export async function signInWithEmailAndPassword(dispatch, email, password) {
+	dispatch({ type: actionTypes.LOADING });
 
 	try {
-		await Auth.signInWithGoogle();
+		const { user } = await Auth.signInWithEmailAndPassword(email, password);
+		const response = await syncUser(user.accessToken);
+
+		const details = response.data.data;
+		const currentUser = {
+			...user,
+			...details,
+		};
+
+		dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
 	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: { error } });
+		dispatch({ type: actionTypes.ERROR, payload: error });
 	}
+}
 
-	dispatch({ type: actionTypes.END_LOADING });
-};
-
-const createUserWithEmailAndPassword = async (dispatch, email, password) => {
-	dispatch({ type: actionTypes.CLEAR_ERROR });
-	dispatch({ type: actionTypes.START_LOADING });
+export async function signOut(dispatch) {
+	dispatch({ type: actionTypes.LOADING });
 
 	try {
-		const {
-			user: { uid },
-		} = await Auth.createUserWithEmailAndPassword(email, password);
-
-		const response = await Api.signUp({ email, uid });
-
-		if (!response.success) throw new Error(response.message);
-	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: { error } });
-	}
-
-	dispatch({ type: actionTypes.END_LOADING });
-};
-
-const signOut = async (dispatch) => {
-	dispatch({ type: actionTypes.CLEAR_ERROR });
-	dispatch({ type: actionTypes.START_LOADING });
-
-	try {
-		await Auth.signOut();
+		await Auth.auth.signOut();
 
 		dispatch({ type: actionTypes.CLEAR_USER });
 	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: { error } });
+		dispatch({ type: actionTypes.ERROR, payload: error });
 	}
+}
 
-	dispatch({ type: actionTypes.END_LOADING });
-};
-
-const sendPasswordResetEmail = async (dispatch, email) => {
-	dispatch({ type: actionTypes.CLEAR_ERROR });
-	dispatch({ type: actionTypes.START_LOADING });
-
+export async function sendPasswordResetEmail(dispatch, email) {
 	try {
 		await Auth.sendPasswordResetEmail(email);
 	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: { error } });
+		dispatch({ type: actionTypes.ERROR, payload: error });
 	}
-
-	dispatch({ type: actionTypes.END_LOADING });
-};
-
-export {
-	signInWithEmailAndPassword,
-	signInWithGoogle,
-	createUserWithEmailAndPassword,
-	signOut,
-	sendPasswordResetEmail,
-};
+}
