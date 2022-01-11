@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { createUser } from "../api";
+import { createOrder } from "../api";
 import { actionTypes, reducer } from "./queryReducer";
 
 const initialState = {
@@ -8,7 +8,7 @@ const initialState = {
 	response: {},
 };
 
-export default function useCreateUser() {
+export default function useCreateOrder() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return [
@@ -18,7 +18,7 @@ export default function useCreateUser() {
 
 			dispatch({ type: actionTypes.LOADING });
 
-			await createUser(token, data)
+			await createOrder(token, data)
 				.then((response) => {
 					dispatch({ type: actionTypes.SUCCESS, payload: response });
 				})

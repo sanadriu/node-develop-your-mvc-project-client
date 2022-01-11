@@ -29,5 +29,6 @@ export default function useDeleteUser() {
 					dispatch({ type: actionTypes.ERROR, payload: error });
 				});
 		}, []),
+		useCallback(() => dispatch({ type: actionTypes.RESET }), []),
 	];
 }

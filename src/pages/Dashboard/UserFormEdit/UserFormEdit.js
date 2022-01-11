@@ -122,7 +122,7 @@ export default function UserFormEdit(props) {
 									value={values.role}
 									onChange={handleChange}
 								>
-									<option value={undefined}>Select role</option>
+									<option value="">Select role</option>
 									<option value="admin">Admin</option>
 									<option value="customer">Customer</option>
 								</Form.Select>

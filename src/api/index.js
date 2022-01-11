@@ -216,3 +216,50 @@ export async function getOrder(token, params) {
 
 	return response;
 }
+
+export async function createOrder(token, data) {
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: "/orders",
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		data,
+		signal,
+	});
+
+	return response;
+}
+
+export async function getUserOrders(token, params) {
+	const { id } = params;
+
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: `/users/${id}/orders`,
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		signal,
+	});
+
+	return response;
+}
+
+export async function getUserOrder(token, params) {
+	const { id, index = 1 } = params;
+
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: `/users/${id}/orders/${index}`,
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		signal,
+	});
+
+	return response;
+}
