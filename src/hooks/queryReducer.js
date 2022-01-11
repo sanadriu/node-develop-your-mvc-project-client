@@ -2,10 +2,13 @@ const actionTypes = {
 	LOADING: Symbol(),
 	SUCCESS: Symbol(),
 	ERROR: Symbol(),
+	RESET: Symbol(),
 };
 
 const reducer = (state, action) => {
 	switch (action.type) {
+		case actionTypes.RESET:
+			return { status: "idle", response: {}, error: null };
 		case actionTypes.LOADING:
 			return { status: "loading", response: {}, error: null };
 		case actionTypes.SUCCESS:

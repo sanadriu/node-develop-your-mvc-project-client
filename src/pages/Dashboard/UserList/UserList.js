@@ -33,7 +33,7 @@ export default function UserList(props) {
 		if (deleteStatus === "success") {
 			getUsers(currentUser?.accessToken, currentPage);
 		}
-	}, [getUsers, deleteStatus, currentUser, currentPage]);
+	}, [getUsers, currentUser, currentPage, deleteStatus]);
 
 	return (
 		<Container as="main">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFetchProducts } from "../../../hooks";
+import { useDeleteProduct, useFetchProducts } from "../../../hooks";
+import { useAuth } from "../../../contexts/AuthContext";
 
 import Error from "../../../components/Error";
 import NavPagination from "../../../components/NavPagination";
@@ -10,26 +11,42 @@ import Spinner from "react-bootstrap/Spinner";
 import ListGroup from "react-bootstrap/ListGroup";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 export default function ProductList(props) {
 	const [currentPage, setCurrentPage] = useState(1);
+	const { currentUser } = useAuth();
+	const [{ status: getStatus, error: getError, response }, getProducts] = useFetchProducts();
+	const [{ status: deleteStatus, error: deleteError }, deleteProduct, clearDeleteProductStatus] = useDeleteProduct();
+	const { data: products, lastPage } = response;
 	const navigate = useNavigate();
 
-	const [{ response, status, error }, getProducts] = useFetchProducts();
-	const { data: products, lastPage } = response;
+	const handleDelete = (id) => {
+		deleteProduct(currentUser?.accessToken, id);
+	};
 
 	useEffect(() => {
 		getProducts(currentPage);
 	}, [getProducts, currentPage]);
 
+	useEffect(() => {
+		if (deleteStatus === "success") {
+			getProducts(currentPage);
+
+			setTimeout(() => {
+				clearDeleteProductStatus();
+			}, 2000);
+		}
+	}, [getProducts, currentPage, deleteStatus, clearDeleteProductStatus]);
+
 	return (
 		<Container as="main">
-			{status === "loading" && (
+			{getStatus === "loading" && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{status === "success" && products && (
+			{getStatus === "success" && products && (
 				<>
 					<Container className="mb-3">
 						<div className="d-flex justify-content-between align-items-center">
@@ -39,6 +56,8 @@ export default function ProductList(props) {
 							</Button>
 						</div>
 						<hr className="mt-2 mb-3" />
+						{deleteStatus === "error" && <Alert variant="danger text-center">{deleteError.message}</Alert>}
+						{deleteStatus === "success" && <Alert variant="success text-center">Product deleted successfully</Alert>}
 						<ListGroup as="ul">
 							{products.map((product) => (
 								<ListGroup.Item
@@ -54,7 +73,7 @@ export default function ProductList(props) {
 										<Button variant="outline-secondary" onClick={() => navigate(product._id)}>
 											<EditIcon />
 										</Button>
-										<Button variant="outline-secondary" onClick={() => {}}>
+										<Button variant="outline-secondary" onClick={() => handleDelete(product._id)}>
 											<DeleteIcon />
 										</Button>
 									</div>
@@ -67,7 +86,7 @@ export default function ProductList(props) {
 					</Container>
 				</>
 			)}
-			{status === "error" && <Error message={error.message} />}
+			{getStatus === "error" && <Error message={getError.message} />}
 		</Container>
 	);
 }
