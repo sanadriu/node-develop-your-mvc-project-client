@@ -14,6 +14,12 @@ const createProductSchema = Yup.object().shape({
         .integer("Please insert a valid Stock")
         .min(0, "Please insert a valid Stock")
         .required("Stock is required"),
+        image: Yup.string()
+        .matches(
+            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+            'Enter correct url!'
+        )
+        .required('Please URL image'),
 });
 
 export default createProductSchema;

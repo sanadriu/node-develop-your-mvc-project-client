@@ -14,7 +14,8 @@ export default function CreateProduct(props) {
         initialValues: {
             title: "",
             price: 0,
-            stock: 0
+            stock: 0,
+            image:""
         },
         validationSchema: createProductSchema,
     })
@@ -83,6 +84,22 @@ export default function CreateProduct(props) {
                         </Form.Group>
                         
 
+                        <Form.Group className="mb-3" controlId="image">
+                            <Form.Label>image</Form.Label>
+                            <InputGroup hasValidation>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="insert URL image"
+                                    id="image"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    isInvalid={Boolean(formik.touched.image && formik.errors.image)}
+                                />
+                                <Form.Control.Feedback
+                                    type="invalid">{formik.errors.image}
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
 
                         <Button
                             submitButton
