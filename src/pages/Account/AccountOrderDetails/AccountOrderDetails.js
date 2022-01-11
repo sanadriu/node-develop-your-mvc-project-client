@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { useFetchOrder } from "../../../hooks";
+import { useFetchUserOrder } from "../../../hooks";
 
 import Error from "../../../components/Error";
 
@@ -9,16 +9,16 @@ import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
-export default function OrderDetails() {
-	const { idOrder } = useParams();
+export default function AccountOrderDetails() {
+	const { numOrder } = useParams();
 	const { currentUser } = useAuth();
 
-	const [{ status, error, response }, getOrder] = useFetchOrder();
+	const [{ status, error, response }, getOrder] = useFetchUserOrder();
 	const { data: order } = response;
 
 	useEffect(() => {
-		getOrder(currentUser?.accessToken, idOrder);
-	}, [getOrder, currentUser, idOrder]);
+		getOrder(currentUser?.accessToken, currentUser?._id, numOrder);
+	}, [getOrder, currentUser, numOrder]);
 
 	return (
 		<Container as="main">
@@ -32,7 +32,7 @@ export default function OrderDetails() {
 					<Container className="mb-3">
 						<div className="d-flex justify-content-between align-items-center">
 							<h1 className="fw-light m-0">Order details</h1>
-							<span className="fw-light">{`Order #${idOrder}`}</span>
+							<span className="fw-light">{`Order #${order._id}`}</span>
 						</div>
 						<hr className="mt-2 mb-3" />
 						<div>
@@ -51,33 +51,6 @@ export default function OrderDetails() {
 									<span className="fw-light">{order.products.length}</span>
 								</ListGroup.Item>
 							</ListGroup>
-							{order.user !== null && (
-								<>
-									<h6 className="fs-6 py-2 fw-normal border-bottom">User</h6>
-									<ListGroup className="mb-2">
-										<ListGroup.Item className="d-flex justify-content-between">
-											<span>Email address</span>
-											<span className="fw-light">{order.user.email}</span>
-										</ListGroup.Item>
-										<ListGroup.Item className="d-flex justify-content-between">
-											<span>Phone number</span>
-											<span className="fw-light">{order.user.phone}</span>
-										</ListGroup.Item>
-										<ListGroup.Item className="d-flex justify-content-between">
-											<span>Fullname</span>
-											<span className="fw-light">
-												{order.user.firstname && order.user.lastname
-													? order.user.firstname + " " + order.user.lastname
-													: "Not specified"}
-											</span>
-										</ListGroup.Item>
-										<ListGroup.Item className="d-flex justify-content-between">
-											<span>Email</span>
-											<span className="fw-light">{order.user.email}</span>
-										</ListGroup.Item>
-									</ListGroup>
-								</>
-							)}
 							<h6 className="fs-6 py-2 fw-normal border-bottom">Shipping Address</h6>
 							<ListGroup className="mb-2">
 								<ListGroup.Item className="d-flex justify-content-between">

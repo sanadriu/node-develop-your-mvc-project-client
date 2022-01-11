@@ -2,11 +2,11 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckout } from "../../contexts/CheckoutContext";
-import schema from "../CheckoutPayment/schema";
+import schema from "./schema";
 
 import { Form, InputGroup } from "react-bootstrap";
 
-export default function CheckoutPayment() {
+export default function CheckoutPayment(props) {
 	const navigate = useNavigate();
 	const {
 		state: { paymentDetails, step },
@@ -28,10 +28,8 @@ export default function CheckoutPayment() {
 			const { setSubmitting } = actions;
 
 			setSubmitting(true);
-			setTimeout(() => {
-				setPaymentDetails(values);
-				goNext();
-			}, 250);
+			setPaymentDetails(values);
+			goNext();
 		},
 	});
 
@@ -52,7 +50,6 @@ export default function CheckoutPayment() {
 							value={values.cardHolderName}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							autoFocus
 							isInvalid={touched.cardHolderName && errors.cardHolderName}
 						/>
 						<Form.Control.Feedback type="invalid">{errors.cardHolderName}</Form.Control.Feedback>
@@ -70,7 +67,6 @@ export default function CheckoutPayment() {
 							value={values.cardNumber}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							autoFocus
 							isInvalid={touched.cardNumber && errors.cardNumber}
 						/>
 						<Form.Control.Feedback type="invalid">{errors.cardNumber}</Form.Control.Feedback>
@@ -88,7 +84,6 @@ export default function CheckoutPayment() {
 							value={values.cardExpirationMonth}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							autoFocus
 							isInvalid={touched.cardExpirationMonth && errors.cardExpirationMonth}
 						/>
 						<Form.Control.Feedback type="invalid">{errors.cardExpirationMonth}</Form.Control.Feedback>
@@ -106,7 +101,6 @@ export default function CheckoutPayment() {
 							value={values.cardExpirationYear}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							autoFocus
 							isInvalid={touched.cardExpirationYear && errors.cardExpirationYear}
 						/>
 						<Form.Control.Feedback type="invalid">{errors.cardExpirationYear}</Form.Control.Feedback>
@@ -124,22 +118,21 @@ export default function CheckoutPayment() {
 							value={values.cardCVV}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							autoFocus
 							isInvalid={touched.cardCVV && errors.cardCVV}
 						/>
 						<Form.Control.Feedback type="invalid">{errors.cardCVV}</Form.Control.Feedback>
 					</InputGroup>
 				</Form.Group>
-				<div className="d-flex my-2 gap-2">
+				<div className="d-flex justify-content-center my-2 gap-2">
 					<button
 						type="button"
-						className="btn btn-outline-secondary w-50"
+						className="btn btn-outline-secondary w-25"
 						disabled={isValidating || isSubmitting}
 						onClick={goBack}
 					>
 						Go back
 					</button>
-					<button className="btn btn-secondary w-50" disabled={!isValid || isValidating || isSubmitting} type="submit">
+					<button className="btn btn-secondary w-25" disabled={!isValid || isValidating || isSubmitting} type="submit">
 						Continue
 					</button>
 				</div>

@@ -6,11 +6,10 @@ import schema from "./schema";
 
 import { Form, InputGroup } from "react-bootstrap";
 
-export default function CheckoutAddress() {
+export default function CheckoutAddress(props) {
 	const navigate = useNavigate();
 	const {
 		state: { shippingAddress, step },
-		goBack,
 		goNext,
 		setShippingAddress,
 	} = useCheckout();
@@ -28,10 +27,8 @@ export default function CheckoutAddress() {
 			const { setSubmitting } = actions;
 
 			setSubmitting(true);
-			setTimeout(() => {
-				setShippingAddress(values);
-				goNext();
-			}, 250);
+			setShippingAddress(values);
+			goNext();
 		},
 	});
 
@@ -51,7 +48,6 @@ export default function CheckoutAddress() {
 						value={values.address}
 						onChange={handleChange}
 						onBlur={handleBlur}
-						autoFocus
 						isInvalid={touched.address && errors.address}
 					/>
 					<Form.Control.Feedback type="invalid">{errors.address}</Form.Control.Feedback>
@@ -108,16 +104,8 @@ export default function CheckoutAddress() {
 					<Form.Control.Feedback type="invalid">{errors.countryCode}</Form.Control.Feedback>
 				</InputGroup>
 			</Form.Group>
-			<div className="d-flex my-2 gap-2">
-				<button
-					type="button"
-					className="btn btn-outline-secondary w-50"
-					disabled={isValidating || isSubmitting}
-					onClick={goBack}
-				>
-					Go back
-				</button>
-				<button className="btn btn-secondary w-50" disabled={!isValid || isValidating || isSubmitting} type="submit">
+			<div className="d-flex justify-content-center my-2 gap-2">
+				<button className="btn btn-secondary w-25" disabled={!isValid || isValidating || isSubmitting} type="submit">
 					Continue
 				</button>
 			</div>

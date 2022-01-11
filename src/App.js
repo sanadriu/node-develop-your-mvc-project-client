@@ -1,4 +1,5 @@
 import { AuthProvider } from "./contexts/AuthContext";
+import { CheckoutProvider } from "./contexts/CheckoutContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
@@ -10,6 +11,8 @@ import CheckoutAddress from "./components/CheckoutAddress";
 import CheckoutPayment from "./components/CheckoutPayment";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
+import AccountOrderList from "./pages/Account/AccountOrderList";
+import AccountOrderDetails from "./pages/Account/AccountOrderDetails";
 import SecurityForm from "./pages/Account/SecurityForm";
 import UserList from "./pages/Dashboard/UserList";
 import ProductList from "./pages/Dashboard/ProductList";
@@ -29,7 +32,14 @@ function App() {
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-out" element={<SignOut />} />
 					<Route path="/product" element={<Product />} />
-					<Route path="/checkout" element={<Checkout />}>
+					<Route
+						path="/checkout"
+						element={
+							<CheckoutProvider>
+								<Checkout />
+							</CheckoutProvider>
+						}
+					>
 						<Route path="" element={<Navigate to="1" />} />
 						<Route path="1" element={<CheckoutAddress />} />
 						<Route path="2" element={<CheckoutPayment />} />
@@ -37,6 +47,8 @@ function App() {
 					</Route>
 					<Route path="/account" element={<Account />}>
 						<Route path="security" element={<SecurityForm />} />
+						<Route path="orders" element={<AccountOrderList />} />
+						<Route path="orders/:numOrder" element={<AccountOrderDetails />} />
 					</Route>
 					<Route path="/dashboard" element={<Dashboard />}>
 						<Route path="users" element={<UserList />} />
