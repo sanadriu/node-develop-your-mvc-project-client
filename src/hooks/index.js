@@ -1,2 +1,9 @@
 export { default as useFetchProduct } from "./useFetchProduct";
 export { default as useFetchProducts } from "./useFetchProducts";
+export { default as useFetchUser } from "./useFetchUser";
+export { default as useFetchUsers } from "./useFetchUsers";
+export { default as useCreateUser } from "./useCreateUser";
+export { default as useUpdateUser } from "./useUpdateUser";
+export { default as useDeleteUser } from "./useDeleteUser";
+export { default as useFetchOrder } from "./useFetchOrder";
+export { default as useFetchOrders } from "./useFetchOrders";

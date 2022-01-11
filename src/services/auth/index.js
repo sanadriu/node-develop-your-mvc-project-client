@@ -11,9 +11,10 @@ const firebaseConfig = {
 };
 
 const app = FirebaseApp.initializeApp(firebaseConfig);
+
 export const auth = FirebaseAuth.getAuth(app);
 
-export function createUserWithEmailAndPassword(email, password) {
+export function signUpWithEmailAndPassword(email, password) {
 	return FirebaseAuth.createUserWithEmailAndPassword(auth, email, password);
 }
 

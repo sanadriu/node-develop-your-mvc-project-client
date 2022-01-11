@@ -1,13 +1,8 @@
 import { createContext, useContext, useReducer, useEffect, useCallback } from "react";
 import { auth } from "../../services/auth";
 import { reducer, actionTypes } from "./reducer";
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	signInWithGoogle,
-	signOut,
-	sendPasswordResetEmail,
-} from "./handlers";
+import { signUpWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "./handlers";
+import { syncUser } from "../../api";
 
 const initialState = {
 	currentUser: null,
@@ -22,16 +17,26 @@ function AuthProvider({ children }) {
 	const { currentUser, authError, isLoading } = state;
 
 	useEffect(() => {
-		dispatch({ type: actionTypes.START_LOADING });
-
 		const unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
 			if (user) {
-				dispatch({ type: actionTypes.SUCCESS, payload: { user } });
+				dispatch({ type: actionTypes.LOADING });
+
+				syncUser(user.accessToken)
+					.then((response) => {
+						const details = response.data.data;
+						const currentUser = {
+							...user,
+							...details,
+						};
+
+						dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
+					})
+					.catch((error) => {
+						dispatch({ type: actionTypes.ERROR, payload: error });
+					});
 			} else {
 				dispatch({ type: actionTypes.CLEAR_USER });
 			}
-
-			dispatch({ type: actionTypes.END_LOADING });
 		});
 
 		return async () => {
@@ -43,20 +48,17 @@ function AuthProvider({ children }) {
 		currentUser,
 		authError,
 		isLoading,
-		createUserWithEmailAndPassword: useCallback((email, password) => {
-			createUserWithEmailAndPassword(dispatch, email, password);
+		signUpWithEmailAndPassword: useCallback((data) => {
+			signUpWithEmailAndPassword(dispatch, data);
 		}, []),
 		signInWithEmailAndPassword: useCallback((email, password) => {
 			signInWithEmailAndPassword(dispatch, email, password);
 		}, []),
-		signInWithGoogle: useCallback(() => {
-			signInWithGoogle(dispatch);
-		}, []),
 		signOut: useCallback(() => {
 			signOut(dispatch);
 		}, []),
-		sendPasswordResetEmail: useCallback(() => {
-			sendPasswordResetEmail(dispatch);
+		sendPasswordResetEmail: useCallback((email) => {
+			sendPasswordResetEmail(dispatch, email);
 		}, []),
 		setAuthError: useCallback((message) => {
 			dispatch({ type: actionTypes.ERROR, payload: { error: new Error(message) } });

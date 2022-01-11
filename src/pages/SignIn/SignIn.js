@@ -1,12 +1,13 @@
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Header from "../../components/Header";
-import Alert from "react-bootstrap/Alert";
-
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+
+import Header from "../../components/Header";
+
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 export default function SignIn(props) {
 	const { currentUser, authError, isLoading, signInWithEmailAndPassword, resetAuthError } = useAuth();
@@ -39,7 +40,7 @@ export default function SignIn(props) {
 				<Card style={{ width: "24rem" }}>
 					<Card.Body className="bg-light">
 						<h1 className="text-center fw-light fs-3 my-3">Sign In</h1>
-						{authError && <Alert variant="danger">{authError.message}</Alert>}
+						{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
 							<Form.Group className="mb-3">
 								<Form.Label htmlFor="input_email">Email address</Form.Label>
@@ -54,9 +55,10 @@ export default function SignIn(props) {
 								variant="primary"
 								size="sm"
 								type="submit"
+								disabled={isLoading}
 							>
 								<span>Sign In</span>
-								{isLoading && <div class="spinner-border spinner-border-sm" role="status"></div>}
+								{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>

@@ -17,9 +17,19 @@ export default function Header(props) {
 					<Navbar.Collapse id="main-navbar">
 						<Nav>
 							<NavLink to="/home">Home</NavLink>
-							{!currentUser && <NavLink to="/sign-up">Sign Up</NavLink>}
-							{!currentUser && <NavLink to="/sign-in">Sign In</NavLink>}
-							{currentUser && <NavLink to="/sign-out">Sign Out</NavLink>}
+							{!currentUser && (
+								<>
+									<NavLink to="/sign-up">Sign Up</NavLink>
+									<NavLink to="/sign-in">Sign In</NavLink>
+								</>
+							)}
+							{currentUser && (
+								<>
+									{["admin", "main-admin"].includes(currentUser?.role) && <NavLink to="/dashboard">Dashboard</NavLink>}
+									<NavLink to="/account">Account</NavLink>
+									<NavLink to="/sign-out">Sign Out</NavLink>
+								</>
+							)}
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
