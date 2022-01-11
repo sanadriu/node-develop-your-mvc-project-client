@@ -10,7 +10,7 @@ function reducer(state, action) {
 		case actionTypes.BACK:
 			return {
 				...state,
-				step: state.step - 1,
+				step: state.step > 1 ? state.step - 1 : 1,
 			};
 		case actionTypes.NEXT:
 			return {

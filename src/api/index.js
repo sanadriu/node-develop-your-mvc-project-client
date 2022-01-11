@@ -217,6 +217,21 @@ export async function getOrder(token, params) {
 	return response;
 }
 
+export async function createOrder(token, data) {
+	const response = await axios({
+		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+		url: "/orders",
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		data,
+		signal,
+	});
+
+	return response;
+}
+
 export async function getUserOrders(token, params) {
 	const { id } = params;
 

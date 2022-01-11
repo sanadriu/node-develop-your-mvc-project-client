@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCheckout } from "../../contexts/CheckoutContext";
+import { useCheckout } from "../../../contexts/CheckoutContext";
 import schema from "./schema";
 
 import { Form, InputGroup } from "react-bootstrap";
@@ -38,7 +38,7 @@ export default function CheckoutPayment(props) {
 
 	return (
 		<>
-			<Form onSubmit={handleSubmit} className="w-100 p-3">
+			<Form onSubmit={handleSubmit} className="w-100 py-3 px-4">
 				<Form.Group className="mb-3">
 					<Form.Label htmlFor="address">Cardholder*</Form.Label>
 					<InputGroup hasValidation>

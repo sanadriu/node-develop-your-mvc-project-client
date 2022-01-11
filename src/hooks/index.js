@@ -12,3 +12,4 @@ export { default as useUpdateUser } from "./useUpdateUser";
 export { default as useDeleteUser } from "./useDeleteUser";
 export { default as useFetchOrder } from "./useFetchOrder";
 export { default as useFetchOrders } from "./useFetchOrders";
+export { default as useCreateOrder } from "./useCreateOrder";

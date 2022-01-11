@@ -72,35 +72,30 @@ export default function AccountOrderDetails() {
 							</ListGroup>
 							<h6 className="fs-6 py-2 fw-normal border-bottom">Products</h6>
 							<ListGroup className="mb-2">
-								{order.products.map((item) => (
-									<>
-										{item.product !== null ? (
-											<ListGroup.Item
-												key={item.product._id}
-												className="d-flex justify-content-between align-items-center p2"
-											>
-												<div className="d-flex justify-content-between align-items-center p2 gap-3">
-													<img
-														className="rounded"
-														style={{ aspectRatio: 1, width: "3rem" }}
-														src={item.product.images[0]}
-														alt="product"
-													/>
-													<span className="fw-light">{item.product.title}</span>
-												</div>
-												<span className="fw-light">{`${item.units} uds. X ${item.price} €`}</span>
-											</ListGroup.Item>
-										) : (
-											<ListGroup.Item
-												key={item.product}
-												className="d-flex justify-content-between align-items-center p2"
-											>
-												<span className="fw-light fst-italic">Deleted product</span>
-												<span className="fw-light">{`${item.units} uds. X ${item.price} €`}</span>
-											</ListGroup.Item>
-										)}
-									</>
-								))}
+								{order.products.map((item) => {
+									return item.product !== null ? (
+										<ListGroup.Item
+											key={item.product._id}
+											className="d-flex justify-content-between align-items-center p2"
+										>
+											<div className="d-flex justify-content-between align-items-center p2 gap-3">
+												<img
+													className="rounded"
+													style={{ aspectRatio: 1, width: "3rem" }}
+													src={item.product.images[0]}
+													alt="product"
+												/>
+												<span className="fw-light">{item.product.title}</span>
+											</div>
+											<span className="fw-light">{`${item.units} uds. X ${item.price} €`}</span>
+										</ListGroup.Item>
+									) : (
+										<ListGroup.Item key={item.product} className="d-flex justify-content-between align-items-center p2">
+											<span className="fw-light fst-italic">Deleted product</span>
+											<span className="fw-light">{`${item.units} uds. X ${item.price} €`}</span>
+										</ListGroup.Item>
+									);
+								})}
 							</ListGroup>
 						</div>
 					</Container>

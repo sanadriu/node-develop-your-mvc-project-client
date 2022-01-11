@@ -1,4 +1,6 @@
 import { useReducer, createContext, useContext } from "react";
+import { useCreateOrder } from "../../hooks";
+import { useAuth } from "../AuthContext/AuthContext.js";
 import { actionTypes, reducer } from "./reducer.js";
 
 const initialState = {
@@ -10,28 +12,27 @@ const initialState = {
 		countryCode: "ES",
 	},
 	paymentDetails: {
-		method: "Card",
 		cardHolderName: "",
 		cardNumber: "",
 		cardExpirationMonth: "",
 		cardExpirationYear: "",
 		cardCVV: "",
 	},
-	orderCosts: {
-		subtotal: 0,
-		shipping: 0,
-	},
 };
 
 const CheckoutContext = createContext();
 
 function CheckoutProvider({ children }) {
+	const { currentUser } = useAuth();
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const [{ createOrderStatus, createOrderError }, createOrder] = useCreateOrder();
 
 	return (
 		<CheckoutContext.Provider
 			value={{
 				state,
+				createOrderStatus,
+				createOrderError,
 				goBack: () => {
 					dispatch({ type: actionTypes.BACK });
 				},
@@ -43,6 +44,17 @@ function CheckoutProvider({ children }) {
 				},
 				setPaymentDetails: (values) => {
 					dispatch({ type: actionTypes.SET_PAYMENT_DETAILS, payload: values });
+				},
+				createOrder: () => {
+					const order = {
+						user: currentUser?._id,
+						shippingCost: 5,
+						shippingAddress: state.shippingAddress,
+						paymentDetails: state.paymentDetails,
+						products: [],
+					};
+
+					createOrder(currentUser?.accessToken, order);
 				},
 			}}
 		>
