@@ -31,8 +31,12 @@ function AuthConsumer({ children }) {
 	return <CartContext.Consumer>{children}</CartContext.Consumer>;
 }
 
+function getCartSubtotal(item) {
+	return item.price * item.quantity, 0;
+	}
+
 function useCart() {
 	return useContext(CartContext) || null;
 }
 
-export { AuthProvider, AuthConsumer, useCart };
+export { AuthProvider, AuthConsumer, useCart, getCartSubtotal };

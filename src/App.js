@@ -9,6 +9,7 @@ import Product from "./pages/Product/";
 import Checkout from "./pages/Checkout";
 import CheckoutAddress from "./pages/Checkout/CheckoutAddress";
 import CheckoutPayment from "./pages/Checkout/CheckoutPayment";
+import CheckoutSummary from "./pages/Checkout/CheckoutSummary";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import AccountOrderList from "./pages/Account/AccountOrderList";
@@ -43,7 +44,7 @@ function App() {
 						<Route path="" element={<Navigate to="1" />} />
 						<Route path="1" element={<CheckoutAddress />} />
 						<Route path="2" element={<CheckoutPayment />} />
-						<Route path="3" element={<div>Resumen reshulón</div>} />
+						<Route path="3" element={<CheckoutSummary/>} />
 					</Route>
 					<Route path="/account" element={<Account />}>
 						<Route path="security" element={<SecurityForm />} />

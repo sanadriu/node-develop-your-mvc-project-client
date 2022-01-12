@@ -3,6 +3,7 @@ const actionTypes = {
 	NEXT: Symbol(),
 	SET_SHIPPING_ADDRESS: Symbol(),
 	SET_PAYMENT_DETAILS: Symbol(),
+	SET_ORDER: Symbol(),
 };
 
 function reducer(state, action) {
@@ -27,6 +28,11 @@ function reducer(state, action) {
 				...state,
 				paymentDetails: { ...action.payload },
 			};
+			case actionTypes.SET_ORDER:
+				return {
+				...state,
+				OrderSummary: { ...action.payload },
+				};
 		default:
 			return state;
 	}
