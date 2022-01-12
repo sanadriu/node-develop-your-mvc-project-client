@@ -1,14 +1,15 @@
+import { useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { useAuth } from "../../contexts/AuthContext";
-
+import Cart from "../Cart/Cart";
 import NavLink from "../NavLink";
 
 export default function Header(props) {
 	const { currentUser } = useAuth();
-
-	return (
+	const [showcart, setShowcart] = useState(false);
+	return (<>
 		<header>
 			<Navbar bg="dark" variant="dark" expand="sm">
 				<Container className="d-flex justify-content-between">
@@ -21,6 +22,9 @@ export default function Header(props) {
 								<>
 									<NavLink to="/sign-up">Sign Up</NavLink>
 									<NavLink to="/sign-in">Sign In</NavLink>
+									<button onClick={ ()=>setShowcart(!showcart)} type="button" id="sidebarCollapse" className="btn btn-primary">
+					<span>Cart</span>
+				</button>
 								</>
 							)}
 							{currentUser && (
@@ -36,5 +40,7 @@ export default function Header(props) {
 				</Container>
 			</Navbar>
 		</header>
+		<Cart show={ !showcart}/>
+		</>
 	);
 }

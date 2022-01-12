@@ -6,8 +6,6 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import Product from "./pages/Product/";
-import CreateProduct from "./components/ProductCard/CreateProduct";
-
 import Checkout from "./pages/Checkout";
 import CheckoutAddress from "./pages/Checkout/CheckoutAddress";
 import CheckoutPayment from "./pages/Checkout/CheckoutPayment";

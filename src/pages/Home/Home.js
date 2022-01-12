@@ -11,6 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Cart from "../../components/Cart/Cart";
+// import Cart from "../../components/Cart/Cart";
 
 export default function Home(props) {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -21,19 +22,6 @@ export default function Home(props) {
 	useEffect(() => {
 		getProducts(currentPage);
 	}, [getProducts, currentPage]);
-
-
-	function handleAddToCart(product) {
-		products.map((product) => (
-			product._id
-		))
-	}
-
-
-
-
-
-
 
 
 	return (<>
@@ -64,7 +52,6 @@ export default function Home(props) {
 				{status === "error" && <Error message={error.message} />}
 			</Container>
 		</Container>
-		<Cart handleAddToCart={ handleAddToCart}/>
 	</>
 	);
 }

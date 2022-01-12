@@ -1,8 +1,11 @@
+
 export function addItem(cartItems, product) {
-	const cartItem = cartItems.find((cartItem) => cartItem.id === product.id);
+	const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
+
+	console.log(cartItem);
 
 	if (cartItem) {
-		if (cartItems.units < product.stock) cartItem.units++;
+		if (cartItem.units < product.stock) cartItem.units++;
 	} else {
 		cartItems.push({
 			...product,
@@ -14,18 +17,18 @@ export function addItem(cartItems, product) {
 }
 
 export function removeItem(cartItems, product) {
-	const cartItem = cartItems.find((cartItem) => cartItem.id === product.id);
-
+	const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
+  
 	if (cartItem) {
-		if (cartItems.units > 1) {
-			cartItem.units--;
-		} else {
-			cartItems = cartItems.filter((cartItem) => cartItem.id !== product.id);
-		}
+	  if (cartItem.units > 1) {
+		cartItem.units--;
+	  } else {
+		cartItems = cartItems.filter((cartItem) => cartItem._id !== product._id);
+	  }
 	}
-
+  
 	return cartItems;
-}
+  }
 
 export function changeUnitsItem(cartItems, product, units) {
 	const cartItem = cartItems.find((cartItem) => cartItem.id === product.id);

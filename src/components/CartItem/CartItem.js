@@ -1,17 +1,11 @@
 
+import { useCart } from "../../contexts/CartContext/CartContext";
 export default function CartItem(props) {
-    const { title, price, stock } = props
 
-    function buildSelectOptions(stock) {
-        return Array.from({ length: stock }, (_value, index) => {
-            const currentIndex = index + 1;
-            return (
-                <option key={currentIndex} value={currentIndex}>
-                    {currentIndex}
-                </option>
-            );
-        });
-    }
+    const { title, price, stock,_id } = props
+
+    const {addItem,removeItem } = useCart()
+    
     return (
         <div className="col">
             <div className="row flex-column"></div>
@@ -31,18 +25,11 @@ export default function CartItem(props) {
                             </div>
                             <div className="col mt-auto">
                                 <div className="row">
-                                    <div className="col col-6 col-lg-4">
-                                        <select
-                                            className="custom-select"
-                                        // onChange={onHandleChange}
-                                        // onBlur={onHandleChange}
-                                        // value={quantity}
-                                        >
-                                            {buildSelectOptions(stock)}
-                                        </select>
+                                <div className="col col-6 col-lg-8">
+                                        <button  className="btn btn-success" onClick={()=>addItem(_id)}>AddItem</button>
                                     </div>
                                     <div className="col col-6 col-lg-8">
-                                        <button onClick={console.log("need add functionality remove")}>Remove</button>
+                                        <button  className="btn btn-danger" onClick={()=>removeItem(_id)}>RemoveItem</button>
                                     </div>
                                 </div>
                             </div>
