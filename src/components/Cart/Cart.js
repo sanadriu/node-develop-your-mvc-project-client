@@ -19,7 +19,7 @@ export default function Cart(props) {
 					</div>
 					<hr className="my-0" />
 					{cartItems.length > 0 ? (
-						cartItems.map((item, index) => <CartItem key={index} {...item} />)
+						cartItems.map((item, index) => <CartItem key={index} item={item} />)
 					) : (
 						<div className="p-3">
 							<h4 className="text-center">Your cart is empty</h4>

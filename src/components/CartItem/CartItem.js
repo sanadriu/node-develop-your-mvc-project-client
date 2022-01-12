@@ -1,10 +1,10 @@
 import { useCart } from "../../contexts/CartContext/CartContext";
 
 export default function CartItem(props) {
-	const { _id, title, images, product, units, price } = props;
+	const { item } = props;
+	const { title, units, price } = item;
 
 	const { addItem, removeItem } = useCart();
-	console.log(product);
 
 	return (
 		<div className="p-3">
@@ -19,10 +19,10 @@ export default function CartItem(props) {
 					<span className="w-50 bg-primary d-flex align-items-center justify-content-center rounded fw-bold">
 						{units}
 					</span>
-					<button className="w-25 btn btn-success fw-bold" onClick={() => addItem(_id)}>
+					<button className="w-25 btn btn-success fw-bold" onClick={() => addItem(item)}>
 						+
 					</button>
-					<button className="w-25 btn btn-danger fw-bold" onClick={() => removeItem(_id)}>
+					<button className="w-25 btn btn-danger fw-bold" onClick={() => removeItem(item)}>
 						-
 					</button>
 				</div>
