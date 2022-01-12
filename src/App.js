@@ -1,5 +1,6 @@
 import { AuthProvider } from "./contexts/AuthContext";
 import { CheckoutProvider } from "./contexts/CheckoutContext";
+import { CartProvider } from "./contexts/CartContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
@@ -15,13 +16,13 @@ import AccountOrderList from "./pages/Account/AccountOrderList";
 import AccountOrderDetails from "./pages/Account/AccountOrderDetails";
 import SecurityForm from "./pages/Account/SecurityForm";
 import UserList from "./pages/Dashboard/UserList";
-import ProductList from "./pages/Dashboard/ProductList";
 import UserFormCreate from "./pages/Dashboard/UserFormCreate";
 import UserFormEdit from "./pages/Dashboard/UserFormEdit";
+import ProductList from "./pages/Dashboard/ProductList";
+import ProductFormCreate from "./pages/Dashboard/ProductFormCreate";
+import ProductFormEdit from "./pages/Dashboard/ProductFormEdit";
 import OrderList from "./pages/Dashboard/OrderList";
 import OrderDetails from "./pages/Dashboard/OrderDetails";
-import ProductFormCreate from "./pages/Dashboard/ProductFormCreate";
-import { CartProvider } from "./contexts/CartContext";
 
 function App() {
 	return (
@@ -58,7 +59,7 @@ function App() {
 							<Route path="users/:idUser" element={<UserFormEdit />} />
 							<Route path="users/new" element={<UserFormCreate />} />
 							<Route path="products" element={<ProductList />} />
-							<Route path="products/:idProduct" element={<div>Product</div>} />
+							<Route path="products/:idProduct" element={<ProductFormEdit />} />
 							<Route path="products/new" element={<ProductFormCreate />} />
 							<Route path="orders" element={<OrderList />} />
 							<Route path="orders/:idOrder" element={<OrderDetails />} />

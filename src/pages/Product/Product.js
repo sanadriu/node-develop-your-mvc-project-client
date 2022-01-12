@@ -14,7 +14,7 @@ import Col from "react-bootstrap/Col";
 
 export default function Product() {
 	const { idProduct } = useParams();
-	const { addItem } = useCart;
+	const { addItem } = useCart();
 	const [{ response, status, error }, getProduct] = useFetchProduct(idProduct);
 	const { data: product } = response;
 
