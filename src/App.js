@@ -22,51 +22,53 @@ import UserFormCreate from "./pages/Dashboard/UserFormCreate";
 import UserFormEdit from "./pages/Dashboard/UserFormEdit";
 import OrderList from "./pages/Dashboard/OrderList";
 import OrderDetails from "./pages/Dashboard/OrderDetails";
+import ProductFormCreate from "./pages/Dashboard/ProductFormCreate";
+import { CartProvider } from "./contexts/CartContext";
 
 function App() {
 	return (
 		<AuthProvider>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Navigate to="/home" />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/sign-up" element={<SignUp />} />
-					<Route path="/sign-in" element={<SignIn />} />
-					<Route path="/sign-out" element={<SignOut />} />
-					<Route path="/product" element={<Product />} />
-					<Route path="/createproduct" element={< CreateProduct/>} />
-					<Route path="/checkout" element={<Checkout />} />
-					<Route
-						path="/checkout"
-						element={
-							<CheckoutProvider>
-								<Checkout />
-							</CheckoutProvider>
-						}
-					>
-						<Route path="" element={<Navigate to="1" />} />
-						<Route path="1" element={<CheckoutAddress />} />
-						<Route path="2" element={<CheckoutPayment />} />
-						<Route path="3" element={<div>Resumen reshulón</div>} />
-					</Route>
-					<Route path="/account" element={<Account />}>
-						<Route path="security" element={<SecurityForm />} />
-						<Route path="orders" element={<AccountOrderList />} />
-						<Route path="orders/:numOrder" element={<AccountOrderDetails />} />
-					</Route>
-					<Route path="/dashboard" element={<Dashboard />}>
-						<Route path="users" element={<UserList />} />
-						<Route path="users/:idUser" element={<UserFormEdit />} />
-						<Route path="users/new" element={<UserFormCreate />} />
-						<Route path="products" element={<ProductList />} />
-						<Route path="products/:idProduct" element={<div>Product</div>} />
-						<Route path="products/new" element={<div>New Product</div>} />
-						<Route path="orders" element={<OrderList />} />
-						<Route path="orders/:idOrder" element={<OrderDetails />} />
-					</Route>
-					<Route path="/product/:idProduct" element={<Product />} />
-				</Routes>
-			</BrowserRouter>
+			<CartProvider>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/" element={<Navigate to="/home" />} />
+						<Route path="/home" element={<Home />} />
+						<Route path="/sign-up" element={<SignUp />} />
+						<Route path="/sign-in" element={<SignIn />} />
+						<Route path="/sign-out" element={<SignOut />} />
+						<Route path="/product" element={<Product />} />
+						<Route
+							path="/checkout"
+							element={
+								<CheckoutProvider>
+									<Checkout />
+								</CheckoutProvider>
+							}
+						>
+							<Route path="" element={<Navigate to="1" />} />
+							<Route path="1" element={<CheckoutAddress />} />
+							<Route path="2" element={<CheckoutPayment />} />
+							<Route path="3" element={<div>Resumen reshulón</div>} />
+						</Route>
+						<Route path="/account" element={<Account />}>
+							<Route path="security" element={<SecurityForm />} />
+							<Route path="orders" element={<AccountOrderList />} />
+							<Route path="orders/:numOrder" element={<AccountOrderDetails />} />
+						</Route>
+						<Route path="/dashboard" element={<Dashboard />}>
+							<Route path="users" element={<UserList />} />
+							<Route path="users/:idUser" element={<UserFormEdit />} />
+							<Route path="users/new" element={<UserFormCreate />} />
+							<Route path="products" element={<ProductList />} />
+							<Route path="products/:idProduct" element={<div>Product</div>} />
+							<Route path="products/new" element={<ProductFormCreate />} />
+							<Route path="orders" element={<OrderList />} />
+							<Route path="orders/:idOrder" element={<OrderDetails />} />
+						</Route>
+						<Route path="/product/:idProduct" element={<Product />} />
+					</Routes>
+				</BrowserRouter>
+			</CartProvider>
 		</AuthProvider>
 	);
 }

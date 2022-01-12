@@ -7,7 +7,7 @@ const initialState = {
 
 const CartContext = createContext();
 
-function AuthProvider({ children }) {
+function CartProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { cartItems } = state;
 
@@ -27,7 +27,7 @@ function AuthProvider({ children }) {
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
-function AuthConsumer({ children }) {
+function CartConsumer({ children }) {
 	return <CartContext.Consumer>{children}</CartContext.Consumer>;
 }
 
@@ -35,4 +35,4 @@ function useCart() {
 	return useContext(CartContext) || null;
 }
 
-export { AuthProvider, AuthConsumer, useCart };
+export { CartProvider, CartConsumer, useCart };

@@ -1,1 +1,1 @@
-export { AuthProvider, AuthConsumer, useCart } from "./CartContext";
+export { CartProvider, CartConsumer, useCart } from "./CartContext";

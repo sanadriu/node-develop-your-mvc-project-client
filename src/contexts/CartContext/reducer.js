@@ -7,30 +7,23 @@ const actionTypes = {
 };
 
 function reducer(state, action) {
-	const { type, payload } = action;
 	const { cartItems } = state;
 
-	switch (type) {
+	switch (action.type) {
 		case actionTypes.ADD_ITEM:
-			const { product } = payload;
-
 			return {
 				...state,
-				cartItems: addItem(cartItems, product),
+				cartItems: addItem(cartItems, action.payload.product),
 			};
 		case actionTypes.REMOVE_ITEM:
-			const { product } = payload;
-
 			return {
 				...state,
-				cartItems: removeItem(cartItems, product),
+				cartItems: removeItem(cartItems, action.payload.product),
 			};
 		case actionTypes.EDIT_UNITS_ITEM:
-			const { product, units } = payload;
-
 			return {
 				...state,
-				cartItems: changeUnitsItem(cartItems, product, units),
+				cartItems: changeUnitsItem(cartItems, action.payload.product, action.payload.units),
 			};
 		default:
 			return state;
