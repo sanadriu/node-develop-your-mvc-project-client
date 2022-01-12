@@ -22,6 +22,20 @@ export default function Home(props) {
 		getProducts(currentPage);
 	}, [getProducts, currentPage]);
 
+
+	function handleAddToCart(product) {
+		products.map((product) => (
+			product._id
+		))
+	}
+
+
+
+
+
+
+
+
 	return (<>
 		<Container className="d-flex flex-column min-vh-100 p-0" fluid>
 			<Header />
@@ -50,8 +64,8 @@ export default function Home(props) {
 				{status === "error" && <Error message={error.message} />}
 			</Container>
 		</Container>
-		<Cart />
-		</>
+		<Cart handleAddToCart={ handleAddToCart}/>
+	</>
 	);
 }
 

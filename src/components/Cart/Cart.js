@@ -9,13 +9,10 @@ import CartItem from "../CartItem";
     //     }, 0);
     // }
 
-export default function Cart(props) {
-    // const {products}=props
-    console.log(props)
+export default function Cart() {
+
         return (
             <aside >
-            {/* <aside {...props}> */}
-                
                 <div className="row flex-column">
                     <div className="col shopping__cart__header">
                         <h2 className="h3 mt-2">Shopping Cart</h2>
