@@ -3,7 +3,7 @@ import axios from "axios";
 const abortController = new AbortController();
 const signal = abortController.signal;
 
-export async function syncUser(token, data) {
+export async function syncUser(token, data = {}) {
 	const response = await axios({
 		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
 		url: "/users/sync",

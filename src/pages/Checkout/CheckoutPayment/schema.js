@@ -2,7 +2,6 @@ import * as Yup from "yup";
 import cardValidator from "card-validator";
 
 const schema = Yup.object({
-	method: Yup.string().required("Select a payment method."),
 	cardHolderName: Yup.string()
 		.required("Cardholder is required.")
 		.test("test-card-holder", "Invalid card holder.", function (value) {
