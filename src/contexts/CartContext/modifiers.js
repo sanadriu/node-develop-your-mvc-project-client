@@ -1,8 +1,6 @@
 export function addItem(cartItems, product) {
 	const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
 
-	console.log(cartItem);
-
 	if (cartItem) {
 		if (cartItem.units < product.stock) cartItem.units++;
 	} else {

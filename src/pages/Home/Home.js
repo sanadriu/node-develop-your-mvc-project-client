@@ -22,33 +22,35 @@ export default function Home(props) {
 	}, [getProducts, currentPage]);
 
 	return (
-		<Container className="d-flex flex-column min-vh-100 p-0" fluid>
-			<Header />
-			<Container as="main" className="d-flex flex-column justify-content-center flex-grow-1">
-				{status === "loading" && (
-					<Container className="d-flex align-items-center justify-content-center flex-grow-1">
-						<Spinner animation="border" role="status" />
-					</Container>
-				)}
-				{status === "success" && products && (
-					<>
-						<Container className="p-5 flex-grow-1">
-							<Row>
-								{products.map((product) => (
-									<Col className="mb-4" xs={12} md={6} xl={4} key={product._id}>
-										<ProductCard {...product} />
-									</Col>
-								))}
-							</Row>
+		<>
+			<Container className="d-flex flex-column min-vh-100 p-0" fluid>
+				<Header />
+				<Container as="main" className="d-flex flex-column justify-content-center flex-grow-1">
+					{status === "loading" && (
+						<Container className="d-flex align-items-center justify-content-center flex-grow-1">
+							<Spinner animation="border" role="status" />
 						</Container>
-						<Container className="d-flex flex-row justify-content-center">
-							<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
-						</Container>
-					</>
-				)}
-				{status === "error" && <Error message={error.message} />}
+					)}
+					{status === "success" && products && (
+						<>
+							<Container className="p-5 flex-grow-1">
+								<Row>
+									{products.map((product) => (
+										<Col className="mb-4" xs={12} md={6} xl={4} key={product._id}>
+											<ProductCard {...product} />
+										</Col>
+									))}
+								</Row>
+							</Container>
+							<Container className="d-flex flex-row justify-content-center">
+								<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
+							</Container>
+						</>
+					)}
+					{status === "error" && <Error message={error.message} />}
+				</Container>
 			</Container>
-		</Container>
+		</>
 	);
 }
 
