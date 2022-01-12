@@ -51,7 +51,7 @@ export default function Header(props) {
 					</Container>
 				</Navbar>
 			</header>
-			<Cart show={!displayCart} />
+			{displayCart && <Cart />}
 		</>
 	);
 }

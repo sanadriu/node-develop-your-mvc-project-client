@@ -9,11 +9,10 @@ function getCartTotal(item) {
 export default function Cart(props) {
 	const { cartItems = [] } = useCart();
 
-	const { show } = props;
 	return (
 		<>
 			<div className="wrapper position-relative">
-				<nav id="sidebar" className={`position-absolute end-0 rounded ${show ? "active" : ""}`}>
+				<nav id="sidebar" className="position-absolute end-0 rounded" style={{ zIndex: 1000 }}>
 					<div className="p-3">
 						<h2 className="h3 m-0">Shopping Cart</h2>
 					</div>

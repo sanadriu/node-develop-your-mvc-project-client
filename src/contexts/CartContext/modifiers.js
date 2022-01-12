@@ -1,41 +1,37 @@
 export function addItem(cartItems, product) {
 	const index = cartItems.findIndex((cartItem) => cartItem._id === product._id);
 
-	console.log(product);
-
 	if (index !== -1) {
-		if (cartItems[index].units < product.stock) {
-			cartItems[index].units++;
-			console.log("holi");
-		}
+		const stock = cartItems[index].stock;
+		const units = cartItems[index].units;
+
+		const newCartItems = [...cartItems];
+
+		newCartItems[index] = { ...cartItems[index], units: units < stock ? units + 1 : units };
+
+		return newCartItems;
 	} else {
-		console.log("before ", cartItems);
-
-		cartItems.push({
-			...product,
-			units: 1,
-		});
-
-		console.log("after ", cartItems);
+		return [...cartItems, { ...product, units: 1 }];
 	}
-
-	return cartItems;
 }
 
 export function removeItem(cartItems, product) {
-	const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
+	const index = cartItems.findIndex((cartItem) => cartItem._id === product._id);
 
-	console.log(cartItem);
+	if (index !== -1) {
+		const units = cartItems[index].units;
+		if (units > 1) {
+			const newCartItems = [...cartItems];
 
-	if (cartItem) {
-		if (cartItem.units > 1) {
-			cartItem.units = cartItem.units - 1;
+			newCartItems[index] = { ...cartItems[index], units: units - 1 };
+
+			return newCartItems;
 		} else {
-			cartItems = cartItems.filter((cartItem) => cartItem._id !== product._id);
+			return cartItems.filter((cartItem) => cartItem._id !== product._id);
 		}
+	} else {
+		return cartItems;
 	}
-
-	return cartItems;
 }
 
 export function changeUnitsItem(cartItems, product, units) {
