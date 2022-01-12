@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import useFetchProduct from "../../hooks/useFetchProduct";
+import { useCart } from "../../contexts/CartContext/CartContext";
+import { useFetchProduct } from "../../hooks";
 
 import Header from "../../components/Header";
 import Error from "../../components/Error";
@@ -13,7 +14,7 @@ import Col from "react-bootstrap/Col";
 
 export default function Product() {
 	const { idProduct } = useParams();
-
+	const { addItem } = useCart;
 	const [{ response, status, error }, getProduct] = useFetchProduct(idProduct);
 	const { data: product } = response;
 
@@ -55,7 +56,9 @@ export default function Product() {
 									<p className="font-weight-bold">Stock {product.stock}</p>
 								</div>
 								<div className="p-2">
-									<button className="btn btn-secondary">Add to cart</button>
+									<button className="btn btn-secondary" onClick={() => addItem(product)}>
+										Add to cart
+									</button>
 								</div>
 							</Col>
 						</Row>
