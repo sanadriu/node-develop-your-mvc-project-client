@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useCart } from "../../contexts/CartContext";
 
 import Cart from "../Cart";
 import NavLink from "../NavLink";
@@ -11,6 +12,7 @@ import Button from "react-bootstrap/Button";
 
 export default function Header(props) {
 	const { currentUser } = useAuth();
+	const { cartItems } = useCart();
 	const [displayCart, setDisplayCart] = useState(false);
 	return (
 		<>
@@ -34,18 +36,18 @@ export default function Header(props) {
 											<NavLink to="/dashboard">Dashboard</NavLink>
 										)}
 										<NavLink to="/account">Account</NavLink>
-										<NavLink to="/checkout">Checkout</NavLink>
 										<NavLink to="/sign-out">Sign Out</NavLink>
-										<Button
-											onClick={() => setDisplayCart(!displayCart)}
-											type="button"
-											id="sidebarCollapse"
-											className="btn btn-primary"
-										>
-											<span>Cart</span>
-										</Button>
 									</>
 								)}
+								{cartItems.length > 0 && <NavLink to="/checkout">Checkout</NavLink>}
+								<Button
+									onClick={() => setDisplayCart(!displayCart)}
+									type="button"
+									id="sidebarCollapse"
+									className="btn btn-primary"
+								>
+									<span>Cart</span>
+								</Button>
 							</Nav>
 						</Navbar.Collapse>
 					</Container>

@@ -18,6 +18,7 @@ const initialState = {
 		cardExpirationYear: "",
 		cardCVV: "",
 	},
+
 };
 
 const CheckoutContext = createContext();
@@ -45,12 +46,16 @@ function CheckoutProvider({ children }) {
 				setPaymentDetails: (values) => {
 					dispatch({ type: actionTypes.SET_PAYMENT_DETAILS, payload: values });
 				},
+				setOrder: (values) => {
+					dispatch({ type: actionTypes.SET_ORDER, payload: values });
+				},
 				createOrder: () => {
 					const order = {
 						user: currentUser?._id,
 						shippingCost: 5,
 						shippingAddress: state.shippingAddress,
 						paymentDetails: state.paymentDetails,
+						OrderSummary: state.OrderSummary,
 						products: [],
 					};
 

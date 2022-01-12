@@ -1,13 +1,30 @@
+import { Outlet, useNavigate } from "react-router-dom";
+import { useCheckout } from "../../contexts/CheckoutContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { useCart } from "../../contexts/CartContext";
+import { useEffect } from "react";
+
 import Header from "../../components/Header";
 import Container from "react-bootstrap/Container";
-import { Outlet } from "react-router-dom";
-import { useCheckout } from "../../contexts/CheckoutContext";
 
 const steps = { 1: "Shipping address", 2: "Payments details", 3: "Order summary" };
+
 export default function Checkout() {
+	const { currentUser } = useAuth();
+	const { cartItems } = useCart();
 	const {
 		state: { step },
 	} = useCheckout();
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (currentUser === null) navigate("/sign-in");
+	}, [navigate, currentUser]);
+
+	useEffect(() => {
+		if (cartItems.length === 0) navigate("/home");
+	}, [navigate, cartItems]);
 
 	return (
 		<div className="d-flex flex-column min-vh-100">

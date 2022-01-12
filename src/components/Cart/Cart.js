@@ -2,8 +2,12 @@ import { useCart } from "../../contexts/CartContext/CartContext";
 import CartItem from "../CartItem";
 import "./style.css";
 
-function getCartTotal(item) {
-	return item.price * item.quantity || 0;
+function getCartTotal(cartItems) {
+	return cartItems
+		.reduce((acc, item) => {
+			return acc + item.price * item.units;
+		}, 0)
+		.toFixed(2);
 }
 
 export default function Cart(props) {
