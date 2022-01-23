@@ -2,22 +2,22 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
-export default function SignOut(props) {
-	const { currentUser, signOut, resetAuthError } = useAuth();
+export default function SignOut() {
+	const { user, logout, clear } = useAuth();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		return resetAuthError;
-	}, [resetAuthError]);
+		return clear;
+	}, [clear]);
 
 	useEffect(() => {
-		navigate("/home", { replace: true });
-	}, [navigate, currentUser]);
+		if (!user) navigate("/home", { replace: true });
+	}, [navigate, user]);
 
 	useEffect(() => {
-		signOut();
+		logout();
 		navigate("/home", { replace: true });
-	}, [navigate, signOut]);
+	}, [navigate, logout]);
 
 	return null;
 }

@@ -1,66 +1,96 @@
-import { syncUser } from "../../api";
 import * as Auth from "../../services/auth";
-import { actionTypes } from "./reducer";
+import {
+	setAuthStartLoading,
+	setAuthEndLoading,
+	setAuthError,
+	setAuthUser,
+	clearAuthError,
+	clearAuthUser,
+} from "./actions";
+import { userRegister, userSync } from "../../api";
 
-export async function signUpWithEmailAndPassword(dispatch, data) {
-	dispatch({ type: actionTypes.LOADING });
+export function syncHandler(dispatch, firebaseUser) {
+	if (firebaseUser) {
+		dispatch(setAuthStartLoading());
 
-	const { email, password, ...details } = data;
+		const token = firebaseUser.accessToken;
 
-	try {
-		const { user } = await Auth.signUpWithEmailAndPassword(email, password);
-		const response = await syncUser(user.accessToken, details).catch((error) => {
-			Auth.deleteUser(user);
+		userSync({ token })
+			.then((response) => {
+				const { success, message, data } = response;
 
-			return Promise.reject(error);
+				if (!success) return Promise.reject(message);
+
+				const user = {
+					...firebaseUser,
+					...data,
+				};
+
+				dispatch(setAuthUser(user));
+			})
+			.catch((error) => {
+				dispatch(setAuthError(error));
+			});
+	} else {
+		dispatch(clearAuthUser());
+	}
+}
+
+export function registerHandler(dispatch, data) {
+	dispatch(setAuthStartLoading());
+
+	userRegister({ data })
+		.then((response) => {
+			const { success, message } = response;
+
+			if (!success) return Promise.reject(message);
+
+			return Auth.signInWithEmailAndPassword(data.email, data.password);
+		})
+		.then(() => {
+			dispatch(setAuthEndLoading());
+		})
+		.catch((error) => {
+			dispatch(setAuthError(error));
 		});
-
-		const currentUser = {
-			...user,
-			...response.data.data,
-		};
-
-		dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
-	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: error });
-	}
 }
 
-export async function signInWithEmailAndPassword(dispatch, email, password) {
-	dispatch({ type: actionTypes.LOADING });
+export function loginHandler(dispatch, email, password) {
+	dispatch(setAuthStartLoading());
 
-	try {
-		const { user } = await Auth.signInWithEmailAndPassword(email, password);
-		const response = await syncUser(user.accessToken);
-
-		const details = response.data.data;
-		const currentUser = {
-			...user,
-			...details,
-		};
-
-		dispatch({ type: actionTypes.SUCCESS, payload: currentUser });
-	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: error });
-	}
+	Auth.signInWithEmailAndPassword(email, password)
+		.then(() => {
+			dispatch(setAuthEndLoading());
+		})
+		.catch((error) => {
+			dispatch(setAuthError(error));
+		});
 }
 
-export async function signOut(dispatch) {
-	dispatch({ type: actionTypes.LOADING });
+export function logoutHandler(dispatch) {
+	dispatch(setAuthStartLoading());
 
-	try {
-		await Auth.auth.signOut();
-
-		dispatch({ type: actionTypes.CLEAR_USER });
-	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: error });
-	}
+	Auth.signOut()
+		.then(() => {
+			dispatch(clearAuthUser());
+		})
+		.catch((error) => {
+			dispatch(setAuthError(error));
+		});
 }
 
-export async function sendPasswordResetEmail(dispatch, email) {
-	try {
-		await Auth.sendPasswordResetEmail(email);
-	} catch (error) {
-		dispatch({ type: actionTypes.ERROR, payload: error });
-	}
+export function resetPasswordHandler(dispatch, email) {
+	dispatch(setAuthStartLoading());
+
+	Auth.sendPasswordResetEmail(email)
+		.then(() => {
+			dispatch(setAuthEndLoading());
+		})
+		.catch((error) => {
+			dispatch(setAuthError(error));
+		});
+}
+
+export function clear(dispatch) {
+	dispatch(clearAuthError);
 }

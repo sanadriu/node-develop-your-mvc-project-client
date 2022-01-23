@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFetchProducts } from "../../hooks";
+import useFetchProducts from "../../hooks/useFetchProducts";
 
 import Header from "../../components/Header";
 import Error from "../../components/Error";
@@ -11,27 +11,29 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-export default function Home(props) {
+export default function Home() {
 	const [currentPage, setCurrentPage] = useState(1);
+	const { request, response = {} } = useFetchProducts();
 
-	const [{ response, status, error }, getProducts] = useFetchProducts();
 	const { data: products, lastPage } = response;
 
 	useEffect(() => {
-		getProducts(currentPage);
-	}, [getProducts, currentPage]);
+		const params = { page: currentPage };
+
+		request.send({ params });
+	}, [request.send, currentPage]);
 
 	return (
 		<>
 			<Container className="d-flex flex-column min-vh-100 p-0" fluid>
 				<Header />
 				<Container as="main" className="d-flex flex-column justify-content-center flex-grow-1">
-					{status === "loading" && (
+					{request.status === "loading" && (
 						<Container className="d-flex align-items-center justify-content-center flex-grow-1">
 							<Spinner animation="border" role="status" />
 						</Container>
 					)}
-					{status === "success" && products && (
+					{request.status === "done" && response.success && (
 						<>
 							<Container className="p-5 flex-grow-1">
 								<Row>
@@ -47,11 +49,10 @@ export default function Home(props) {
 							</Container>
 						</>
 					)}
-					{status === "error" && <Error message={error.message} />}
+					{request.status === "done" && !response.success && <Error message={response.message} />}
+					{request.status === "error" && <Error message={request.error.message} />}
 				</Container>
 			</Container>
 		</>
 	);
 }
-
-/* <ProductCard title={product.title} description={product.description} images={product.images} stock={product.stock} price={product.price}/> */

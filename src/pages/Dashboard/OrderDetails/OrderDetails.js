@@ -11,14 +11,14 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 export default function OrderDetails() {
 	const { idOrder } = useParams();
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 
 	const [{ status, error, response }, getOrder] = useFetchOrder();
 	const { data: order } = response;
 
 	useEffect(() => {
-		getOrder(currentUser?.accessToken, idOrder);
-	}, [getOrder, currentUser, idOrder]);
+		getOrder(user?.accessToken, idOrder);
+	}, [getOrder, user, idOrder]);
 
 	return (
 		<Container as="main">
@@ -27,7 +27,7 @@ export default function OrderDetails() {
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{status === "success" && order && (
+			{status === "done" && order && (
 				<>
 					<Container className="mb-3">
 						<div className="d-flex justify-content-between align-items-center">
@@ -128,6 +128,7 @@ export default function OrderDetails() {
 					</Container>
 				</>
 			)}
+			{status === "done" && !success && <Error message={message} />}
 			{status === "error" && <Error message={error.message} />}
 		</Container>
 	);

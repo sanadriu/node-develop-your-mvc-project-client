@@ -1,46 +1,56 @@
-const actionTypes = {
-	LOADING: Symbol(),
-	END_LOADING: Symbol(),
-	SUCCESS: Symbol(),
-	ERROR: Symbol(),
-	CLEAR_USER: Symbol(),
-	CLEAR_ERROR: Symbol(),
-};
+import {
+	AUTH_START_LOADING,
+	AUTH_STOP_LOADING,
+	AUTH_SET_USER,
+	AUTH_SET_ERROR,
+	AUTH_CLEAR_USER,
+	AUTH_CLEAR_ERROR,
+} from "./types";
 
-function reducer(state, action) {
+export default function reducer(state, action) {
 	switch (action.type) {
-		case actionTypes.LOADING:
+		case AUTH_START_LOADING: {
 			return {
 				...state,
-				authError: null,
-				isLoading: true,
+				error: null,
+				status: "loading",
 			};
-		case actionTypes.SUCCESS:
+		}
+		case AUTH_STOP_LOADING: {
 			return {
 				...state,
-				currentUser: action.payload,
-				isLoading: false,
+				status: "idle",
 			};
-		case actionTypes.ERROR:
+		}
+		case AUTH_SET_USER: {
 			return {
 				...state,
-				authError: action.payload,
-				isLoading: false,
+				user: action.payload,
+				status: "idle",
 			};
-		case actionTypes.CLEAR_USER:
+		}
+		case AUTH_SET_ERROR: {
 			return {
 				...state,
-				currentUser: null,
-				isLoading: false,
+				error: action.payload,
+				status: "error",
 			};
-		case actionTypes.CLEAR_ERROR:
+		}
+		case AUTH_CLEAR_USER: {
 			return {
 				...state,
-				authError: null,
+				user: null,
+				status: "idle",
 			};
+		}
+		case AUTH_CLEAR_ERROR: {
+			return {
+				...state,
+				error: null,
+				status: "idle",
+			};
+		}
 		default:
 			return state;
 	}
 }
-
-export { actionTypes, reducer };

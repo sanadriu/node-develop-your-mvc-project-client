@@ -5,22 +5,22 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
 
-export default function SecurityForm(props) {
-	const { currentUser, sendPasswordResetEmail, isLoading, authError } = useAuth();
+export default function SecurityForm() {
+	const { user, sendPasswordResetEmail, status, error } = useAuth();
 
 	const handleResetPassword = () => {
-		sendPasswordResetEmail(currentUser?.email);
+		sendPasswordResetEmail(user?.email);
 	};
 
 	return (
 		<Container as="main">
 			<h4 className="fw-light m-0">Change Password</h4>
 			<hr className="mt-2 mb-3" />
-			{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
+			{error && <Alert variant="danger text-center">{error.message}</Alert>}
 			<ListGroup>
 				<ListGroup.Item className="d-flex justify-content-between align-items-center">
 					<span>Send reset password email</span>
-					<Button variant="warning" onClick={handleResetPassword} disabled={isLoading}>
+					<Button variant="warning" onClick={handleResetPassword} disabled={status === "loading"}>
 						Reset password
 					</Button>
 				</ListGroup.Item>

@@ -1,62 +1,83 @@
-import axios from "axios";
+import { request } from "../services/api";
 
-const abortController = new AbortController();
-const signal = abortController.signal;
+export function userSync({ signal, token }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-export async function syncUser(token, data = {}) {
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: "/users/sync",
 		method: "POST",
 		headers: {
+			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "http://localhost:3000",
-			Authorization: `Bearer ${token}`,
 		},
-		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getUsers(token, params) {
+export function userRegister({ signal, data }) {
+	const config = {
+		url: "/users/register",
+		method: "POST",
+		data,
+		signal,
+	};
+
+	return request(config);
+}
+
+export function getUsers({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
 	const { page = 1 } = params;
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/users?page=${page}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getUser(token, params) {
-	const { id = undefined } = params;
+export function getUser({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	if (!id) throw new Error("User ID is required");
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const { id } = params;
+
+	const config = {
 		url: `/users/${id}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function createUser(token, data) {
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+export function createUser({ signal, token, data }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
+	const config = {
 		url: "/users",
 		method: "POST",
 		headers: {
@@ -64,18 +85,23 @@ export async function createUser(token, data) {
 		},
 		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function updateUser(token, params, data) {
-	const { id = undefined } = params;
+export function updateUser({ signal, token, params = {}, data }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	if (!id) throw new Error("User ID is required");
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const { id } = params;
+
+	const config = {
 		url: `/users/${id}`,
 		method: "PATCH",
 		headers: {
@@ -83,59 +109,66 @@ export async function updateUser(token, params, data) {
 		},
 		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function deleteUser(token, params) {
-	const { id = undefined } = params;
+export function deleteUser({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	if (!id) throw new Error("User ID is required");
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const { id } = params;
+
+	const config = {
 		url: `/users/${id}`,
 		method: "DELETE",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getProducts(params) {
+export function getProducts({ signal, params = {} }) {
 	const { page = 1 } = params;
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/products?page=${page}`,
 		method: "GET",
-	});
+		signal,
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getProduct(params) {
-	const { id = undefined } = params;
+export function getProduct({ signal, params = {} }) {
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
 
-	if (!id) throw new Error("Product ID is required");
-
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/products/${id}`,
 		method: "GET",
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function createProduct(token, data) {
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+export function createProduct({ signal, token, data }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
+	const config = {
 		url: "/products",
 		method: "POST",
 		headers: {
@@ -143,18 +176,23 @@ export async function createProduct(token, data) {
 		},
 		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function updateProduct(token, params, data) {
-	const { id = undefined } = params;
+export function updateProduct({ signal, token, params = {}, data }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	if (!id) throw new Error("Product ID is required");
+	if (!params.id) {
+		return Promise.reject("Product ID must be provided in 'params.id' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const { id } = params;
+
+	const config = {
 		url: `/products/${id}`,
 		method: "PATCH",
 		headers: {
@@ -162,64 +200,82 @@ export async function updateProduct(token, params, data) {
 		},
 		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function deleteProduct(token, params) {
-	const { id = undefined } = params;
+export function deleteProduct({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	if (!id) throw new Error("Product ID is required");
+	if (!params.id) {
+		return Promise.reject("Product ID must be provided in 'params.id' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const { id } = params;
+
+	const config = {
 		url: `/products/${id}`,
 		method: "DELETE",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getOrders(token, params) {
+export function getOrders({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
 	const { page = 1 } = params;
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/orders?page=${page}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getOrder(token, params) {
-	const { id = 1 } = params;
+export function getOrder({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	if (!params.id) {
+		return Promise.reject("Order ID must be provided in 'params.id' property");
+	}
+
+	const { id } = params;
+
+	const config = {
 		url: `/orders/${id}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function createOrder(token, data) {
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+export function createOrder({ signal, token, data }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
+	const config = {
 		url: "/orders",
 		method: "POST",
 		headers: {
@@ -227,39 +283,57 @@ export async function createOrder(token, data) {
 		},
 		data,
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getUserOrders(token, params) {
+export function getUserOrders({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
+
 	const { id } = params;
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/users/${id}/orders`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
 
-export async function getUserOrder(token, params) {
+export function getUserOrder({ signal, token, params = {} }) {
+	if (!token) {
+		return Promise.reject("Auth bearer token must be provided in 'token' property");
+	}
+
+	if (!params.id) {
+		return Promise.reject("User ID must be provided in 'params.id' property");
+	}
+
 	const { id, index = 1 } = params;
 
-	const response = await axios({
-		baseURL: process.env.REACT_APP_SERVER_BASE_URL,
+	const config = {
 		url: `/users/${id}/orders/${index}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 		signal,
-	});
+	};
 
-	return response;
+	return request(config);
 }
+
+// if (!(signal instanceof AbortSignal)) {
+// 	return Promise.reject("Abort signal must be provided in 'signal' property");
+// }

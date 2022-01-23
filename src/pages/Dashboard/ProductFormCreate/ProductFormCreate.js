@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useCreateProduct } from "../../../hooks";
-import schema from "./schema";
+import validationSchema from "./schema";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -11,22 +11,23 @@ import Container from "react-bootstrap/Container";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 
+const initialValues = {
+	title: "",
+	description: "",
+	price: 0,
+	stock: 0,
+	image: "",
+};
+
 export default function ProductFormCreate(props) {
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const [{ status, error }, createProduct] = useCreateProduct();
 	const navigate = useNavigate();
 	const formik = useFormik({
-		initialValues: {
-			title: "",
-			description: "",
-			price: 0,
-			stock: 0,
-			image: "",
-		},
-		validationSchema: schema,
+		initialValues,
+		validationSchema,
 		onSubmit: (values, actions) => {
 			const { setSubmitting } = actions;
-
 			const data = {
 				title: values.title,
 				description: values.description,
@@ -36,12 +37,12 @@ export default function ProductFormCreate(props) {
 			};
 
 			setSubmitting(true);
-			createProduct(currentUser?.accessToken, data).finally(() => setSubmitting(false));
+			createProduct(user?.accessToken, data).finally(() => setSubmitting(false));
 		},
 	});
 
 	useEffect(() => {
-		if (status === "success") {
+		if (status === "done") {
 			setTimeout(() => navigate("./.."), 2000);
 		}
 	}, [navigate, status]);
@@ -53,8 +54,9 @@ export default function ProductFormCreate(props) {
 		<Container as="main">
 			<h1 className="fw-light m-0">Create Product</h1>
 			<hr className="mt-2 mb-3" />
+			{status === "done" && success && <Alert variant="success text-center">Product created successfully</Alert>}
+			{status === "done" && !success && <Alert variant="danger text-center">{message}</Alert>}
 			{status === "error" && <Alert variant="danger text-center">{error.message}</Alert>}
-			{status === "success" && <Alert variant="success text-center">Product created successfully</Alert>}
 			<Form className="p-4" onSubmit={handleSubmit}>
 				<div className="d-flex gap-2">
 					<Form.Group className="w-50 mb-3">

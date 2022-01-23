@@ -11,7 +11,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
 export default function Header(props) {
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const { cartItems } = useCart();
 	const [displayCart, setDisplayCart] = useState(false);
 	return (
@@ -24,17 +24,15 @@ export default function Header(props) {
 						<Navbar.Collapse id="main-navbar">
 							<Nav>
 								<NavLink to="/home">Home</NavLink>
-								{!currentUser && (
+								{!user && (
 									<>
 										<NavLink to="/sign-up">Sign Up</NavLink>
 										<NavLink to="/sign-in">Sign In</NavLink>
 									</>
 								)}
-								{currentUser && (
+								{user && (
 									<>
-										{["admin", "main-admin"].includes(currentUser?.role) && (
-											<NavLink to="/dashboard">Dashboard</NavLink>
-										)}
+										{["admin", "main-admin"].includes(user?.role) && <NavLink to="/dashboard">Dashboard</NavLink>}
 										<NavLink to="/account">Account</NavLink>
 										<NavLink to="/sign-out">Sign Out</NavLink>
 									</>

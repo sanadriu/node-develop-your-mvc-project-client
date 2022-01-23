@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useFetchUser, useUpdateUser } from "../../../hooks";
-import schema from "./schema";
+import validationSchema from "./schema";
 
 import Error from "../../../components/Error";
 
@@ -14,13 +14,14 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 
-export default function UserFormEdit(props) {
-	const { idUser } = useParams();
-	const { currentUser } = useAuth();
-	const [{ status: getStatus, error: getError, response }, getUser] = useFetchUser();
-	const [{ status: updateStatus, error: updateError }, updateUser] = useUpdateUser();
-	const { data: user } = response;
+export default function UserFormEdit() {
 	const navigate = useNavigate();
+	const { idUser } = useParams();
+	const { user } = useAuth();
+	const { request: fetchRequest, response: fetchResponse = {} } = useFetchUser();
+	const { request: updateRequest, response: updateResponse = {} } = useUpdateUser();
+
+	const { data: user } = response;
 
 	const formik = useFormik({
 		initialValues: {
@@ -29,25 +30,24 @@ export default function UserFormEdit(props) {
 			password: "",
 			passwordConfirm: "",
 		},
+		validationSchema,
 		enableReinitialize: true,
-		validationSchema: schema,
 		onSubmit: (values, actions) => {
 			const { setSubmitting } = actions;
+			const { password, passwordChange, passwordConfirm, ...data } = values;
+
+			const token = user.accessToken;
+			const params = {
+				id: idUser,
+			};
+
+			if (passwordChange) data.password = password;
 
 			setSubmitting(true);
-			updateUser(currentUser?.accessToken, idUser, values).finally(() => setSubmitting(false));
+
+			updateRequest.send({ token, params, data }).finally(() => setSubmitting(false));
 		},
 	});
-
-	useEffect(() => {
-		getUser(currentUser?.accessToken, idUser);
-	}, [getUser, currentUser, idUser]);
-
-	useEffect(() => {
-		if (updateStatus === "success") {
-			setTimeout(() => navigate("./.."), 2000);
-		}
-	}, [navigate, updateStatus]);
 
 	const {
 		values,
@@ -63,22 +63,46 @@ export default function UserFormEdit(props) {
 		setTouched,
 	} = formik;
 
+	useEffect(() => {
+		if (!user) return;
+
+		const token = user.accessToken;
+		const params = {
+			id: idUser,
+		};
+
+		fetchRequest.send({ token, params });
+	}, [fetchRequest.send, user, idUser]);
+
+	useEffect(() => {
+		if (updateRequest.status === "done") {
+			setTimeout(() => navigate("./.."), 2000);
+		}
+	}, [navigate, updateRequest.status]);
+
 	return (
 		<Container as="main">
-			{getStatus === "loading" && (
+			{fetchRequest.status === "loading" && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{getStatus === "success" && user && (
+			{fetchRequest.status === "done" && fetchResponse.success && (
 				<>
 					<div className="d-flex justify-content-between align-items-center">
 						<h1 className="fw-light m-0">Edit User</h1>
 						<span className="fw-light">{`User #${idUser}`}</span>
 					</div>
 					<hr className="mt-2 mb-3" />
-					{updateStatus === "error" && <Alert variant="danger text-center">{updateError.message}</Alert>}
-					{updateStatus === "success" && <Alert variant="success text-center">User updated successfully</Alert>}
+					{updateRequest.status === "done" && updateResponse.success && (
+						<Alert variant="success text-center">User updated successfully</Alert>
+					)}
+					{updateRequest.status === "done" && !updateResponse.success && (
+						<Alert variant="success text-center">{updateResponse.message}</Alert>
+					)}
+					{updateRequest.status === "error" && (
+						<Alert variant="danger text-center">{updateRequest.error.message}</Alert>
+					)}
 					<Form className="p-4" onSubmit={handleSubmit}>
 						<div className="d-flex gap-2">
 							<Form.Group className="w-50 mb-3">
@@ -209,7 +233,8 @@ export default function UserFormEdit(props) {
 					</Form>
 				</>
 			)}
-			{getStatus === "error" && <Error message={getError.message} />}
+			{fetchRequest.status === "done" && !fetchResponse.success && <Error message={fetchRequest.error.message} />}
+			{fetchRequest.status === "error" && <Error message={fetchRequest.error.message} />}
 		</Container>
 	);
 }

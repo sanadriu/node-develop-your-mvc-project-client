@@ -9,20 +9,20 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
-export default function SignIn(props) {
-	const { currentUser, authError, isLoading, signInWithEmailAndPassword, resetAuthError } = useAuth();
+export default function SignIn() {
+	const { user, error: authError, status: authStatus, login, clear } = useAuth();
 	const navigate = useNavigate();
 
 	const emailRef = useRef();
 	const passwordRef = useRef();
 
 	useEffect(() => {
-		return resetAuthError;
-	}, [resetAuthError]);
+		return clear;
+	}, [clear]);
 
 	useEffect(() => {
-		if (currentUser) navigate("/home", { replace: true });
-	}, [currentUser, navigate]);
+		if (user) navigate("/home", { replace: true });
+	}, [user, navigate]);
 
 	function handleSubmit(event) {
 		event.preventDefault();
@@ -30,7 +30,7 @@ export default function SignIn(props) {
 		const email = emailRef.current.value;
 		const password = passwordRef.current.value;
 
-		signInWithEmailAndPassword(email, password);
+		login(email, password);
 	}
 
 	return (
@@ -55,10 +55,10 @@ export default function SignIn(props) {
 								variant="primary"
 								size="sm"
 								type="submit"
-								disabled={isLoading}
+								disabled={authStatus === "loading"}
 							>
 								<span>Sign In</span>
-								{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
+								{authStatus === "loading" && <div className="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>

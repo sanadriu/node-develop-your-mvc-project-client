@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 const steps = { 1: "Shipping address", 2: "Payments details", 3: "Order summary" };
 
 export default function Checkout() {
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const { cartItems } = useCart();
 	const {
 		state: { step },
@@ -19,8 +19,8 @@ export default function Checkout() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (currentUser === null) navigate("/sign-in");
-	}, [navigate, currentUser]);
+		if (user === null) navigate("/sign-in");
+	}, [navigate, user]);
 
 	useEffect(() => {
 		if (cartItems.length === 0) navigate("/home");

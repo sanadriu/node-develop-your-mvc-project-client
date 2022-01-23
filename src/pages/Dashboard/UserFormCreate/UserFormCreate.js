@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useCreateUser } from "../../../hooks";
-import schema from "./schema";
+import validationSchema from "./schema";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -11,34 +11,41 @@ import Container from "react-bootstrap/Container";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 
-export default function UserFormCreate(props) {
-	const { currentUser } = useAuth();
-	const [{ status, error }, createUser] = useCreateUser();
+const initialValues = {
+	role: "",
+	email: "",
+	phone: "",
+	firstname: "",
+	lastname: "",
+	password: "",
+	passwordConfirm: "",
+};
+
+export default function UserFormCreate() {
 	const navigate = useNavigate();
+	const { user } = useAuth();
+	const { createRequest, createResponse } = useCreateUser();
+
 	const formik = useFormik({
-		initialValues: {
-			role: "",
-			email: "",
-			phone: "",
-			firstname: "",
-			lastname: "",
-			password: "",
-			passwordConfirm: "",
-		},
-		validationSchema: schema,
+		initialValues,
+		validationSchema,
 		onSubmit: (values, actions) => {
 			const { setSubmitting } = actions;
+			const { passwordConfirm, ...data } = values;
+
+			const token = user.accessToken;
 
 			setSubmitting(true);
-			createUser(currentUser?.accessToken, values).finally(() => setSubmitting(false));
+
+			createRequest.send({ token, data }).finally(() => setSubmitting(false));
 		},
 	});
 
 	useEffect(() => {
-		if (status === "success") {
+		if (createRequest.status === "done") {
 			setTimeout(() => navigate("./.."), 2000);
 		}
-	}, [navigate, status]);
+	}, [navigate, createRequest.status]);
 
 	const { values, errors, touched, isValid, isValidating, isSubmitting, handleBlur, handleChange, handleSubmit } =
 		formik;
@@ -47,8 +54,13 @@ export default function UserFormCreate(props) {
 		<Container as="main">
 			<h1 className="fw-light m-0">Create user</h1>
 			<hr className="mt-2 mb-3" />
-			{status === "error" && <Alert variant="danger text-center">{error.message}</Alert>}
-			{status === "success" && <Alert variant="success text-center">User created successfully</Alert>}
+			{createRequest.status === "done" && createResponse.success && (
+				<Alert variant="success text-center">User created successfully</Alert>
+			)}
+			{createRequest.status === "done" && !createResponse.success && (
+				<Alert variant="danger text-center">{createResponse.message}</Alert>
+			)}
+			{createRequest.status === "error" && <Alert variant="danger text-center">{createRequest.error.message}</Alert>}
 			<Form className="p-4" onSubmit={handleSubmit}>
 				<div className="d-flex gap-2">
 					<Form.Group className="w-50 mb-3">

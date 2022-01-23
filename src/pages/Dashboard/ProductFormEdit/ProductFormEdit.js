@@ -16,7 +16,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 export default function ProductFormEdit(props) {
 	const { idProduct } = useParams();
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const [{ status: getStatus, error: getError, response }, getProduct] = useFetchProduct();
 	const [{ status: updateStatus, error: updateError }, updateProduct] = useUpdateProduct();
 	const { data: product } = response;
@@ -44,7 +44,7 @@ export default function ProductFormEdit(props) {
 			};
 
 			setSubmitting(true);
-			updateProduct(currentUser?.accessToken, idProduct, data).finally(() => setSubmitting(false));
+			updateProduct(user?.accessToken, idProduct, data).finally(() => setSubmitting(false));
 		},
 	});
 

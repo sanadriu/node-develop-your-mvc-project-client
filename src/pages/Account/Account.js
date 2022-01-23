@@ -10,13 +10,13 @@ import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Account(props) {
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
 
 	useEffect(() => {
-		if (!["admin", "main-admin"].includes(currentUser?.role)) navigate("/home", { replace: true });
-	}, [currentUser, navigate]);
+		if (!user) navigate("/home", { replace: true });
+	}, [user, navigate]);
 
 	return (
 		<Container className="d-flex flex-column min-vh-100 p-0" fluid>

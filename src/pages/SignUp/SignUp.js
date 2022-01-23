@@ -10,12 +10,13 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import InputGroup from "react-bootstrap/InputGroup";
 
-import { default as schema } from "./schema.js";
+import schema from "./schema.js";
 
-export default function SignUp(props) {
-	const { currentUser, authError, isLoading, signUpWithEmailAndPassword, resetAuthError } = useAuth();
+export default function SignUp() {
+	const { user, error: authError, status: authStatus, register, clear } = useAuth();
+
 	const navigate = useNavigate();
-	const [errors, setErrors] = useState({});
+	const [errors, setErrors] = useState(null);
 
 	const firstnameRef = useRef();
 	const lastnameRef = useRef();
@@ -25,12 +26,12 @@ export default function SignUp(props) {
 	const passwordConfirmRef = useRef();
 
 	useEffect(() => {
-		return resetAuthError;
-	}, [resetAuthError]);
+		return clear;
+	}, [clear]);
 
 	useEffect(() => {
-		if (currentUser) navigate("/home", { replace: true });
-	}, [currentUser, navigate]);
+		if (user) navigate("/home", { replace: true });
+	}, [user, navigate]);
 
 	function handleSubmit(event) {
 		event.preventDefault();
@@ -47,8 +48,8 @@ export default function SignUp(props) {
 		schema
 			.validate(values, { abortEarly: false })
 			.then(() => {
-				setErrors(() => ({}));
-				signUpWithEmailAndPassword(values);
+				setErrors(() => null);
+				register(values);
 			})
 			.catch((validationErrors) => {
 				const errors = {};
@@ -155,10 +156,10 @@ export default function SignUp(props) {
 								variant="primary"
 								size="sm"
 								type="submit"
-								disabled={isLoading}
+								disabled={authStatus === "loading"}
 							>
 								<span>Sign In</span>
-								{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
+								{authStatus === "loading" && <div className="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>

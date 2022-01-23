@@ -1,34 +1,35 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
+import reducer from "./request/reducer";
+import initialState from "./request/state";
+import { setRequestLoading, setRequestResult, setRequestError, clearRequest } from "./request/actions";
 import { deleteUser } from "../api";
-import { actionTypes, reducer } from "./queryReducer";
 
-const initialState = {
-	status: "idle",
-	error: null,
-	response: {},
-};
+const abortController = new AbortController();
 
 export default function useDeleteUser() {
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const { response, request } = state;
 
-	return [
-		state,
-		useCallback(async (token, id) => {
-			if (!token) return dispatch({ type: actionTypes.ERROR, payload: new Error("Access token is required") });
-			if (!id) return dispatch({ type: actionTypes.ERROR, payload: new Error("User ID is required") });
+	useEffect(() => {
+		return abortController.abort();
+	}, []);
 
-			dispatch({ type: actionTypes.LOADING });
+	request.send = useCallback(
+		({ token, params }) => {
+			dispatch(setRequestLoading());
 
-			const params = { id };
-
-			await deleteUser(token, params)
+			return deleteUser({ signal: abortController.signal, token, params })
 				.then((response) => {
-					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
+					dispatch(setRequestResult(response));
 				})
 				.catch((error) => {
-					dispatch({ type: actionTypes.ERROR, payload: error });
+					dispatch(setRequestError(error));
 				});
-		}, []),
-		useCallback(() => dispatch({ type: actionTypes.RESET }), []),
-	];
+		},
+		[dispatch, abortControllerRef]
+	);
+
+	request.clear = useCallback(() => dispatch(clearRequest()), [dispatch]);
+
+	return { request, response };
 }

@@ -13,40 +13,49 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
-export default function ProductList(props) {
+export default function ProductList() {
 	const [currentPage, setCurrentPage] = useState(1);
-	const { currentUser } = useAuth();
-	const [{ status: getStatus, error: getError, response }, getProducts] = useFetchProducts();
-	const [{ status: deleteStatus, error: deleteError }, deleteProduct, clearDeleteProductStatus] = useDeleteProduct();
+	const { user } = useAuth();
+	const { fetchRequest, fetchResponse } = useFetchProducts();
+	const { deleteRequest, deleteResponse } = useDeleteProduct();
 	const { data: products, lastPage } = response;
 	const navigate = useNavigate();
 
 	const handleDelete = (id) => {
-		deleteProduct(currentUser?.accessToken, id);
+		if (!user) return;
+
+		const token = user.accessToken;
+		const params = { id };
+
+		deleteRequest.send({ token, params });
 	};
 
 	useEffect(() => {
-		getProducts(currentPage);
-	}, [getProducts, currentPage]);
+		const params = { page: currentPage };
+
+		fetchRequest.send({ params });
+	}, [fetchRequest.send, currentPage]);
 
 	useEffect(() => {
-		if (deleteStatus === "success") {
-			getProducts(currentPage);
+		if (deleteRequest.status !== "done") return;
 
-			setTimeout(() => {
-				clearDeleteProductStatus();
-			}, 2000);
-		}
-	}, [getProducts, currentPage, deleteStatus, clearDeleteProductStatus]);
+		const params = {
+			page: currentPage,
+		};
+
+		fetchRequest.send(params);
+
+		setTimeout(() => deleteRequest.clear(), 2000);
+	}, [fetchRequest.send, currentPage, deleteRequest.status, deleteRequest.clear]);
 
 	return (
 		<Container as="main">
-			{getStatus === "loading" && (
+			{fetchRequest.status === "loading" && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{getStatus === "success" && products && (
+			{fetchRequest.status === "done" && fetchResponse.success && (
 				<>
 					<Container className="mb-3">
 						<div className="d-flex justify-content-between align-items-center">
@@ -56,8 +65,15 @@ export default function ProductList(props) {
 							</Button>
 						</div>
 						<hr className="mt-2 mb-3" />
-						{deleteStatus === "error" && <Alert variant="danger text-center">{deleteError.message}</Alert>}
-						{deleteStatus === "success" && <Alert variant="success text-center">Product deleted successfully</Alert>}
+						{deleteRequest.status === "done" && deleteResponse.success && (
+							<Alert variant="success text-center">Product deleted successfully</Alert>
+						)}
+						{deleteRequest.status === "done" && !deleteResponse.success && (
+							<Alert variant="danger text-center">{deleteResponse.message}</Alert>
+						)}
+						{deleteRequest.status === "error" && (
+							<Alert variant="danger text-center">{deleteRequest.error.message}</Alert>
+						)}
 						<ListGroup as="ul">
 							{products.map((product) => (
 								<ListGroup.Item
@@ -86,7 +102,8 @@ export default function ProductList(props) {
 					</Container>
 				</>
 			)}
-			{getStatus === "error" && <Error message={getError.message} />}
+			{fetchRequest.status === "done" && !fetchResponse.success && <Error message={fetchResponse.message} />}
+			{fetchRequest.status === "error" && <Error message={fetchRequest.error.message} />}
 		</Container>
 	);
 }

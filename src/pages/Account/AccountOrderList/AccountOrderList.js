@@ -14,15 +14,24 @@ import Button from "react-bootstrap/Button";
 
 export default function AccountOrderList() {
 	const [currentPage, setCurrentPage] = useState(1);
-	const { currentUser } = useAuth();
+	const { user } = useAuth();
 	const navigate = useNavigate();
 
-	const [{ status, error, response }, getOrders] = useFetchUserOrders();
-	const { data: orders, lastPage } = response;
+	const { request, send: getOrders } = useFetchUserOrders();
+	const { response, status, error } = request;
+	const { success, message, data: orders, lastPage } = response;
 
 	useEffect(() => {
-		getOrders(currentUser?.accessToken, currentUser?._id, currentPage);
-	}, [getOrders, currentUser, currentPage]);
+		if (!user) return;
+
+		const params = {
+			token: user.accessToken,
+			id: user._id,
+			page: currentPage,
+		};
+
+		getOrders(params);
+	}, [getOrders, user, currentPage]);
 
 	return (
 		<Container as="main">
@@ -31,7 +40,7 @@ export default function AccountOrderList() {
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{status === "success" && orders && (
+			{status === "done" && success && (
 				<>
 					<Container className="mb-3">
 						<h1 className="fw-light m-0">Orders</h1>
@@ -75,6 +84,7 @@ export default function AccountOrderList() {
 					</Container>
 				</>
 			)}
+			{status === "done" && !success && <Error message={message} />}
 			{status === "error" && <Error message={error.message} />}
 		</Container>
 	);

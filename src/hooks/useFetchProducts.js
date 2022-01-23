@@ -1,30 +1,35 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
+import reducer from "./request/reducer";
+import initialState from "./request/state";
+import { setRequestLoading, setRequestResult, setRequestError, clearRequest } from "./request/actions";
 import { getProducts } from "../api";
-import { actionTypes, reducer } from "./queryReducer";
 
-const initialState = {
-	status: "idle",
-	error: null,
-	response: {},
-};
+const abortController = new AbortController();
 
 export default function useFetchProducts() {
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const { response, request } = state;
 
-	return [
-		state,
-		useCallback(async (page) => {
-			dispatch({ type: actionTypes.LOADING });
+	useEffect(() => {
+		return abortController.abort();
+	}, []);
 
-			const params = { page };
+	request.send = useCallback(
+		({ params }) => {
+			dispatch(setRequestLoading());
 
-			await getProducts(params)
+			return getProducts({ signal: abortController.signal, params })
 				.then((response) => {
-					dispatch({ type: actionTypes.SUCCESS, payload: response.data });
+					dispatch(setRequestResult(response));
 				})
 				.catch((error) => {
-					dispatch({ type: actionTypes.ERROR, payload: error });
+					dispatch(setRequestError(error));
 				});
-		}, []),
-	];
+		},
+		[dispatch, abortControllerRef]
+	);
+
+	request.clear = useCallback(() => dispatch(clearRequest()), [dispatch]);
+
+	return { request, response };
 }

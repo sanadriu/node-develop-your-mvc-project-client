@@ -1,41 +1,45 @@
-const actionTypes = {
-	BACK: Symbol(),
-	NEXT: Symbol(),
-	SET_SHIPPING_ADDRESS: Symbol(),
-	SET_PAYMENT_DETAILS: Symbol(),
-	SET_ORDER: Symbol(),
-};
+import {
+	CHECKOUT_SET_PREV_STEP,
+	CHECKOUT_SET_NEXT_STEP,
+	CHECKOUT_SET_PAYMENT_DETAILS,
+	CHECKOUT_SET_SHIPPING_ADDRESS,
+	CHECKOUT_SET_ORDER,
+} from "./types";
 
-function reducer(state, action) {
+export default function reducer(state, action) {
 	switch (action.type) {
-		case actionTypes.BACK:
+		case CHECKOUT_SET_PREV_STEP: {
 			return {
 				...state,
 				step: state.step > 1 ? state.step - 1 : 1,
 			};
-		case actionTypes.NEXT:
+		}
+		case CHECKOUT_SET_NEXT_STEP: {
 			return {
 				...state,
 				step: state.step + 1,
 			};
-		case actionTypes.SET_SHIPPING_ADDRESS:
-			return {
-				...state,
-				shippingAddress: { ...action.payload },
-			};
-		case actionTypes.SET_PAYMENT_DETAILS:
+		}
+		case CHECKOUT_SET_SHIPPING_ADDRESS: {
 			return {
 				...state,
 				paymentDetails: { ...action.payload },
 			};
-			case actionTypes.SET_ORDER:
-				return {
+		}
+		case CHECKOUT_SET_PAYMENT_DETAILS: {
+			return {
 				...state,
-				OrderSummary: { ...action.payload },
-				};
-		default:
+				shippingAddress: { ...action.payload },
+			};
+		}
+		case CHECKOUT_SET_ORDER: {
+			return {
+				...state,
+				orderSummary: { ...action.payload },
+			};
+		}
+		default: {
 			return state;
+		}
 	}
 }
-
-export { actionTypes, reducer };

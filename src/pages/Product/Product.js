@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext/CartContext";
-import { useFetchProduct } from "../../hooks";
+import useFetchProduct from "../../hooks/useFetchProduct";
 
 import Header from "../../components/Header";
 import Error from "../../components/Error";
@@ -15,23 +15,26 @@ import Col from "react-bootstrap/Col";
 export default function Product() {
 	const { idProduct } = useParams();
 	const { addItem } = useCart();
-	const [{ response, status, error }, getProduct] = useFetchProduct(idProduct);
+	const { request, response = {} } = useFetchProduct(idProduct);
+
 	const { data: product } = response;
 
 	useEffect(() => {
-		getProduct(idProduct);
-	}, [getProduct, idProduct]);
+		const params = { id: idProduct };
+
+		request.send({ params });
+	}, [request.send, idProduct]);
 
 	return (
 		<div className="d-flex flex-column min-vh-100">
 			<Header />
 			<main className="d-flex flex-basis-1 p-2">
-				{status === "loading" && (
+				{request.status === "loading" && (
 					<Container className="d-flex align-items-center justify-content-center flex-grow-1">
 						<Spinner animation="border" role="status" />
 					</Container>
 				)}
-				{status === "success" && product && (
+				{request.status === "done" && response.success && (
 					<Container className="d-flex justify-content-center align-items-center" fluid="md">
 						<Row>
 							<Col xs={12} sm={4} lg={3} className="d-flex flex-column justify-content-center align-items-center p-3">
@@ -64,7 +67,8 @@ export default function Product() {
 						</Row>
 					</Container>
 				)}
-				{status === "error" && <Error message={error.message} />}
+				{request.status === "done" && !response.success && <Error message={response.message} />}
+				{request.status === "error" && <Error message={request.error.message} />}
 			</main>
 		</div>
 	);

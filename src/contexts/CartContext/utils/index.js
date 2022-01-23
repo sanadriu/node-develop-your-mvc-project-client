@@ -34,7 +34,7 @@ export function removeItem(cartItems, product) {
 	}
 }
 
-export function changeUnitsItem(cartItems, product, units) {
+export function editItemUnits(cartItems, product, units) {
 	const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
 
 	if (cartItem && cartItem.units <= cartItem.stock) {

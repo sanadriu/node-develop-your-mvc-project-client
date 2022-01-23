@@ -1,30 +1,35 @@
-import { useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
+import reducer from "./request/reducer";
+import initialState from "./request/state";
+import { setRequestLoading, setRequestResult, setRequestError, clearRequest } from "./request/actions";
 import { createUser } from "../api";
-import { actionTypes, reducer } from "./queryReducer";
 
-const initialState = {
-	status: "idle",
-	error: null,
-	response: {},
-};
+const abortController = new AbortController();
 
 export default function useCreateUser() {
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const { response, request } = state;
 
-	return [
-		state,
-		async function (token, data) {
-			if (!token) return dispatch({ type: actionTypes.ERROR, payload: new Error("Access token is required") });
+	useEffect(() => {
+		return abortController.abort();
+	}, []);
 
-			dispatch({ type: actionTypes.LOADING });
+	request.send = useCallback(
+		({ token, data }) => {
+			dispatch(setRequestLoading());
 
-			await createUser(token, data)
+			return createUser({ signal: abortController.signal, token, data })
 				.then((response) => {
-					dispatch({ type: actionTypes.SUCCESS, payload: response });
+					dispatch(setRequestResult(response));
 				})
 				.catch((error) => {
-					dispatch({ type: actionTypes.ERROR, payload: error });
+					dispatch(setRequestError(error));
 				});
 		},
-	];
+		[dispatch, abortControllerRef]
+	);
+
+	request.clear = useCallback(() => dispatch(clearRequest()), [dispatch]);
+
+	return { request, response };
 }
