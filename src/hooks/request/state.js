@@ -1,9 +1,8 @@
 const initialState = {
 	response: null,
-	request: {
-		error: null,
-		status: "idle",
-	},
+	error: null,
+	isLoading: false,
+	isFailed: false,
 };
 
 export default initialState;

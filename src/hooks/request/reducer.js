@@ -1,41 +1,33 @@
-import { REQUEST_CLEAR, REQUEST_LOADING, REQUEST_SET_ERROR, REQUEST_SET_RESULT } from "./types";
+import actionTypes from "./types";
+import initialState from "./state";
 
 export default function reducer(state, action) {
 	switch (action.type) {
-		case REQUEST_LOADING: {
+		case actionTypes.loading: {
 			return {
 				...state,
-				request: {
-					...state.request,
-					status: "loading",
-				},
+				isLoading: true,
 			};
 		}
-		case REQUEST_CLEAR: {
-			return {
-				response: null,
-				request: {
-					error: null,
-					status: "idle",
-				},
-			};
-		}
-		case REQUEST_SET_RESULT: {
+		case actionTypes.success: {
 			return {
 				response: action.payload,
-				request: {
-					error: null,
-					status: "done",
-				},
+				error: null,
+				isLoading: false,
+				isFailed: false,
 			};
 		}
-		case REQUEST_SET_ERROR: {
+		case actionTypes.fail: {
 			return {
-				response: null,
-				request: {
-					error: action.payload,
-					status: "error",
-				},
+				...state,
+				error: action.payload,
+				isLoading: false,
+				isFailed: false,
+			};
+		}
+		case actionTypes.reset: {
+			return {
+				...initialState,
 			};
 		}
 		default: {

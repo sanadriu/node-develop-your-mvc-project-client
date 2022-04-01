@@ -7,10 +7,16 @@ const instance = axios.create({
 function request(config) {
 	return instance
 		.request(config)
-		.then((response) => Promise.resolve(response.data))
-		.catch((error) =>
-			error.response ? Promise.resolve(error.response.data) : Promise.reject({ success: false, message: error.message })
-		);
+		.then((response) => {
+			return Promise.resolve(response.data);
+		})
+		.catch((error) => {
+			const { response } = error;
+
+			if (!response) return Promise.reject({ success: false, message: error.message });
+
+			return Promise.resolve(response.data);
+		});
 }
 
 export { instance, request };

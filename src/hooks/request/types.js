@@ -1,4 +1,8 @@
-export const REQUEST_LOADING = Symbol();
-export const REQUEST_SET_ERROR = Symbol();
-export const REQUEST_SET_RESULT = Symbol();
-export const REQUEST_CLEAR = Symbol();
+const actionTypes = Object.freeze({
+	loading: "@request/loading",
+	success: "@request/success",
+	fail: "@request/fail",
+	reset: "@request/reset",
+});
+
+export default actionTypes;
