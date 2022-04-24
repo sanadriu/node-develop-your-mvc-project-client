@@ -1,52 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { useFetchUserOrders } from "../../../hooks";
+import { useRequest } from "../../../hooks/useRequest";
+import { getUserOrders } from "../../../api/orders.api";
 
 import Error from "../../../components/Error";
 import NavPagination from "../../../components/NavPagination";
 import { DetailsIcon } from "../../../components/Icons";
-
 import Spinner from "react-bootstrap/Spinner";
 import ListGroup from "react-bootstrap/ListGroup";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
 export default function AccountOrderList() {
-	const [currentPage, setCurrentPage] = useState(1);
-	const { user } = useAuth();
+	const [page, setPage] = useState(1);
+	const { user, getCurrentUserToken } = useAuth();
 	const navigate = useNavigate();
 
-	const { request, send: getOrders } = useFetchUserOrders();
-	const { response, status, error } = request;
-	const { success, message, data: orders, lastPage } = response;
+	const { response, error, isLoading, isFailed, sendRequest } = useRequest(getUserOrders);
 
 	useEffect(() => {
-		if (!user) return;
-
-		const params = {
-			token: user.accessToken,
-			id: user._id,
-			page: currentPage,
-		};
-
-		getOrders(params);
-	}, [getOrders, user, currentPage]);
+		getCurrentUserToken().then((token) => {
+			sendRequest({ token, params: { page }, id: user._id });
+		});
+	}, [sendRequest, user, page]);
 
 	return (
 		<Container as="main">
-			{status === "loading" && (
+			{isLoading && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{status === "done" && success && (
+			{!isLoading && response?.success === true && (
 				<>
 					<Container className="mb-3">
 						<h1 className="fw-light m-0">Orders</h1>
 						<hr className="mt-2 mb-3" />
 						<ListGroup as="ul">
-							{orders.map((order, index) => (
+							{response.data.map((order, index) => (
 								<ListGroup.Item
 									className="d-flex justify-content-between align-items-center p-0"
 									as="li"
@@ -72,7 +64,7 @@ export default function AccountOrderList() {
 											<span className="fw-light">{order.products.length}</span>
 										</div>
 									</div>
-									<Button variant="outline-secondary" className="m-3" onClick={() => navigate(`${index + 1}`)}>
+									<Button variant="outline-secondary" className="m-3" onClick={() => navigate(index + 1)}>
 										<DetailsIcon />
 									</Button>
 								</ListGroup.Item>
@@ -80,12 +72,12 @@ export default function AccountOrderList() {
 						</ListGroup>
 					</Container>
 					<Container className="d-flex flex-row justify-content-center">
-						<NavPagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
+						<NavPagination page={page} lastPage={response.lastPage} setPage={setPage} />
 					</Container>
 				</>
 			)}
-			{status === "done" && !success && <Error message={message} />}
-			{status === "error" && <Error message={error.message} />}
+			{!isLoading && response?.success === false && <Error message={response.message} />}
+			{!isLoading && isFailed && <Error message={error.message} />}
 		</Container>
 	);
 }

@@ -1,35 +1,44 @@
-import { useCallback, useEffect, useReducer } from "react";
-import reducer from "./request/reducer";
-import initialState from "./request/state";
-import { setRequestLoading, setRequestResult, setRequestError, clearRequest } from "./request/actions";
-import { createUser } from "../api";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { useAuth } from "../contexts/AuthContext";
+import { useRequest } from "./useRequest";
+import { createUser } from "../api/users.api";
+import validationSchema from "../validation/createUser.schema";
 
-const abortController = new AbortController();
+const initialValues = {
+	role: "",
+	email: "",
+	phone: "",
+	firstname: "",
+	lastname: "",
+	password: "",
+	passwordConfirm: "",
+};
 
-export default function useCreateUser() {
-	const [state, dispatch] = useReducer(reducer, initialState);
-	const { response, request } = state;
+export function useCreateUser() {
+	const navigate = useNavigate();
+	const { getCurrentUserToken } = useAuth();
+	const { response, error, isLoading, isFailed, sendRequest } = useRequest(createUser);
+
+	const formik = useFormik({
+		initialValues,
+		validationSchema,
+		onSubmit: (values) => {
+			if (response?.success) return;
+
+			getCurrentUserToken().then((token) => {
+				sendRequest({ token, data: values });
+			});
+		},
+	});
 
 	useEffect(() => {
-		return abortController.abort();
-	}, []);
+		if (response?.success) setTimeout(() => navigate("./.."), 2000);
+	}, [response, navigate]);
 
-	request.send = useCallback(
-		({ token, data }) => {
-			dispatch(setRequestLoading());
-
-			return createUser({ signal: abortController.signal, token, data })
-				.then((response) => {
-					dispatch(setRequestResult(response));
-				})
-				.catch((error) => {
-					dispatch(setRequestError(error));
-				});
-		},
-		[dispatch, abortControllerRef]
-	);
-
-	request.clear = useCallback(() => dispatch(clearRequest()), [dispatch]);
-
-	return { request, response };
+	return {
+		form: { ...formik },
+		createRequest: { response, error, isLoading, isFailed },
+	};
 }

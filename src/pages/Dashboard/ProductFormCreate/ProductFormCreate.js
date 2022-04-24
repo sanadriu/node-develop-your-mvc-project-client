@@ -1,9 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { useAuth } from "../../../contexts/AuthContext";
-import { useCreateProduct } from "../../../hooks";
-import validationSchema from "./schema";
+import { useCreateProduct } from "../../../hooks/useCreateProduct";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -11,59 +6,32 @@ import Container from "react-bootstrap/Container";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 
-const initialValues = {
-	title: "",
-	description: "",
-	price: 0,
-	stock: 0,
-	image: "",
-};
+export default function ProductFormCreate() {
+	const {
+		form: { values, errors, touched, handleBlur, handleChange, handleSubmit, isValid, isValidating },
+		createRequest: { response, error, isLoading, isFailed },
+	} = useCreateProduct();
 
-export default function ProductFormCreate(props) {
-	const { user } = useAuth();
-	const [{ status, error }, createProduct] = useCreateProduct();
-	const navigate = useNavigate();
-	const formik = useFormik({
-		initialValues,
-		validationSchema,
-		onSubmit: (values, actions) => {
-			const { setSubmitting } = actions;
-			const data = {
-				title: values.title,
-				description: values.description,
-				price: values.price,
-				stock: values.stock,
-				images: [values.image],
-			};
-
-			setSubmitting(true);
-			createProduct(user?.accessToken, data).finally(() => setSubmitting(false));
-		},
-	});
-
-	useEffect(() => {
-		if (status === "done") {
-			setTimeout(() => navigate("./.."), 2000);
-		}
-	}, [navigate, status]);
-
-	const { values, errors, touched, isValid, isValidating, isSubmitting, handleBlur, handleChange, handleSubmit } =
-		formik;
+	const CreateAlert = isFailed ? (
+		<Alert variant="danger text-center">{error?.message}</Alert>
+	) : response?.success === false ? (
+		<Alert variant="danger text-center">{response?.message}</Alert>
+	) : response?.success === true ? (
+		<Alert variant="success text-center">{response?.message}</Alert>
+	) : null;
 
 	return (
 		<Container as="main">
-			<h1 className="fw-light m-0">Create Product</h1>
+			<h1 className="fw-light m-0">Create product</h1>
 			<hr className="mt-2 mb-3" />
-			{status === "done" && success && <Alert variant="success text-center">Product created successfully</Alert>}
-			{status === "done" && !success && <Alert variant="danger text-center">{message}</Alert>}
-			{status === "error" && <Alert variant="danger text-center">{error.message}</Alert>}
+			{!isLoading && CreateAlert}
 			<Form className="p-4" onSubmit={handleSubmit}>
 				<div className="d-flex gap-2">
 					<Form.Group className="w-50 mb-3">
-						<Form.Label htmlFor="input_title">Title</Form.Label>
+						<Form.Label htmlFor="input-title">Title</Form.Label>
 						<InputGroup hasValidation>
 							<Form.Control
-								id="input_title"
+								id="input-title"
 								name="title"
 								type="text"
 								isInvalid={Boolean(touched.title && errors.title)}
@@ -75,10 +43,10 @@ export default function ProductFormCreate(props) {
 						</InputGroup>
 					</Form.Group>
 					<Form.Group className="w-25 mb-3">
-						<Form.Label htmlFor="input_price">Price</Form.Label>
+						<Form.Label htmlFor="input-price">Price</Form.Label>
 						<InputGroup hasValidation>
 							<Form.Control
-								id="input_price"
+								id="input-price"
 								name="price"
 								type="text"
 								isInvalid={Boolean(touched.price && errors.price)}
@@ -90,10 +58,10 @@ export default function ProductFormCreate(props) {
 						</InputGroup>
 					</Form.Group>
 					<Form.Group className="w-25 mb-3">
-						<Form.Label htmlFor="input_stock">Stock</Form.Label>
+						<Form.Label htmlFor="input-stock">Stock</Form.Label>
 						<InputGroup hasValidation>
 							<Form.Control
-								id="input_stock"
+								id="input-stock"
 								name="stock"
 								type="number"
 								isInvalid={Boolean(touched.stock && errors.stock)}
@@ -106,12 +74,12 @@ export default function ProductFormCreate(props) {
 					</Form.Group>
 				</div>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_description">Description</Form.Label>
+					<Form.Label htmlFor="input-description">Description</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
 							as="textarea"
 							style={{ resize: "none", height: "10rem" }}
-							id="input_description"
+							id="input-description"
 							name="description"
 							type="text"
 							isInvalid={Boolean(touched.description && errors.description)}
@@ -123,10 +91,10 @@ export default function ProductFormCreate(props) {
 					</InputGroup>
 				</Form.Group>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_image">Image (url)</Form.Label>
+					<Form.Label htmlFor="input-image">Image (url)</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
-							id="input_image"
+							id="input-image"
 							name="image"
 							type="text"
 							isInvalid={Boolean(touched.image && errors.image)}
@@ -142,10 +110,10 @@ export default function ProductFormCreate(props) {
 					variant="primary"
 					size="sm"
 					type="submit"
-					disabled={!isValid || isValidating || isSubmitting}
+					disabled={!isValid || isValidating || isLoading}
 				>
-					<span>Create Product</span>
-					{isSubmitting && <div className="spinner-border spinner-border-sm" role="status"></div>}
+					<span>Create product</span>
+					{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
 				</Button>
 			</Form>
 		</Container>

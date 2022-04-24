@@ -1,7 +1,8 @@
-import { request } from "../services/api";
+import { request } from "../services/api.service";
+import ApiErrors from "./constants/errors";
 
 export function getUsers({ signal, token, params: { page = 1 } }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
 
 	const config = {
 		url: "/users",
@@ -19,8 +20,8 @@ export function getUsers({ signal, token, params: { page = 1 } }) {
 }
 
 export function getUser({ signal, token, id }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_user_id);
 
 	const config = {
 		url: `/users/${id}`,
@@ -35,7 +36,7 @@ export function getUser({ signal, token, id }) {
 }
 
 export function createUser({ signal, token, data }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
 
 	const config = {
 		url: "/users",
@@ -51,8 +52,8 @@ export function createUser({ signal, token, data }) {
 }
 
 export function updateUser({ signal, token, id, data }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_user_id);
 
 	const config = {
 		url: `/users/${id}`,
@@ -68,8 +69,8 @@ export function updateUser({ signal, token, id, data }) {
 }
 
 export function deleteUser({ signal, token, id }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_user_id);
 
 	const config = {
 		url: `/users/${id}`,

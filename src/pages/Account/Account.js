@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
-export default function Account(props) {
+export default function Account() {
 	const { user } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();

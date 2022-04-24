@@ -1,9 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { useAuth } from "../../../contexts/AuthContext";
-import { useCreateUser } from "../../../hooks";
-import validationSchema from "./schema";
+import { useCreateUser } from "../../../hooks/useCreateUser";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -11,63 +6,32 @@ import Container from "react-bootstrap/Container";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 
-const initialValues = {
-	role: "",
-	email: "",
-	phone: "",
-	firstname: "",
-	lastname: "",
-	password: "",
-	passwordConfirm: "",
-};
-
 export default function UserFormCreate() {
-	const navigate = useNavigate();
-	const { user } = useAuth();
-	const { createRequest, createResponse } = useCreateUser();
+	const {
+		form: { values, errors, touched, handleBlur, handleChange, handleSubmit, isValid, isValidating },
+		createRequest: { response, error, isLoading, isFailed },
+	} = useCreateUser();
 
-	const formik = useFormik({
-		initialValues,
-		validationSchema,
-		onSubmit: (values, actions) => {
-			const { setSubmitting } = actions;
-			const { passwordConfirm, ...data } = values;
-
-			const token = user.accessToken;
-
-			setSubmitting(true);
-
-			createRequest.send({ token, data }).finally(() => setSubmitting(false));
-		},
-	});
-
-	useEffect(() => {
-		if (createRequest.status === "done") {
-			setTimeout(() => navigate("./.."), 2000);
-		}
-	}, [navigate, createRequest.status]);
-
-	const { values, errors, touched, isValid, isValidating, isSubmitting, handleBlur, handleChange, handleSubmit } =
-		formik;
+	const CreateAlert = isFailed ? (
+		<Alert variant="danger text-center">{error?.message}</Alert>
+	) : response?.success === false ? (
+		<Alert variant="danger text-center">{response?.message}</Alert>
+	) : response?.success === true ? (
+		<Alert variant="success text-center">{response?.message}</Alert>
+	) : null;
 
 	return (
 		<Container as="main">
 			<h1 className="fw-light m-0">Create user</h1>
 			<hr className="mt-2 mb-3" />
-			{createRequest.status === "done" && createResponse.success && (
-				<Alert variant="success text-center">User created successfully</Alert>
-			)}
-			{createRequest.status === "done" && !createResponse.success && (
-				<Alert variant="danger text-center">{createResponse.message}</Alert>
-			)}
-			{createRequest.status === "error" && <Alert variant="danger text-center">{createRequest.error.message}</Alert>}
+			{!isLoading && CreateAlert}
 			<Form className="p-4" onSubmit={handleSubmit}>
 				<div className="d-flex gap-2">
 					<Form.Group className="w-50 mb-3">
-						<Form.Label htmlFor="input_firstname">First name</Form.Label>
+						<Form.Label htmlFor="input-firstname">First name</Form.Label>
 						<InputGroup hasValidation>
 							<Form.Control
-								id="input_firstname"
+								id="input-firstname"
 								name="firstname"
 								type="text"
 								isInvalid={Boolean(touched.firstname && errors.firstname)}
@@ -79,10 +43,10 @@ export default function UserFormCreate() {
 						</InputGroup>
 					</Form.Group>
 					<Form.Group className="w-50 mb-3">
-						<Form.Label htmlFor="input_lastname">Last name</Form.Label>
+						<Form.Label htmlFor="input-lastname">Last name</Form.Label>
 						<InputGroup hasValidation>
 							<Form.Control
-								id="input_lastname"
+								id="input-lastname"
 								name="lastname"
 								type="text"
 								isInvalid={Boolean(touched.lastname && errors.lastname)}
@@ -95,10 +59,10 @@ export default function UserFormCreate() {
 					</Form.Group>
 				</div>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_role">User role</Form.Label>
+					<Form.Label htmlFor="input-role">User role</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Select
-							id="input_role"
+							id="input-role"
 							name="role"
 							isInvalid={Boolean(touched.role && errors.role)}
 							value={values.role}
@@ -112,10 +76,10 @@ export default function UserFormCreate() {
 					</InputGroup>
 				</Form.Group>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_email">Email address</Form.Label>
+					<Form.Label htmlFor="input-email">Email address</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
-							id="input_email"
+							id="input-email"
 							name="email"
 							type="text"
 							isInvalid={Boolean(touched.email && errors.email)}
@@ -127,10 +91,10 @@ export default function UserFormCreate() {
 					</InputGroup>
 				</Form.Group>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_phone">Phone number</Form.Label>
+					<Form.Label htmlFor="input-phone">Phone number</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
-							id="input_phone"
+							id="input-phone"
 							name="phone"
 							type="tel"
 							isInvalid={Boolean(touched.phone && errors.phone)}
@@ -142,10 +106,10 @@ export default function UserFormCreate() {
 					</InputGroup>
 				</Form.Group>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_password">Password</Form.Label>
+					<Form.Label htmlFor="input-password">Password</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
-							id="input_password"
+							id="input-password"
 							name="password"
 							type="password"
 							isInvalid={Boolean(touched.password && errors.password)}
@@ -157,10 +121,10 @@ export default function UserFormCreate() {
 					</InputGroup>
 				</Form.Group>
 				<Form.Group className="mb-3">
-					<Form.Label htmlFor="input_password_confirm">Password confirmation</Form.Label>
+					<Form.Label htmlFor="input-password-confirm">Password confirmation</Form.Label>
 					<InputGroup hasValidation>
 						<Form.Control
-							id="input_password_confirm"
+							id="input-password-confirm"
 							name="passwordConfirm"
 							type="password"
 							isInvalid={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
@@ -176,10 +140,10 @@ export default function UserFormCreate() {
 					variant="primary"
 					size="sm"
 					type="submit"
-					disabled={!isValid || isValidating || isSubmitting}
+					disabled={!isValid || isValidating || isLoading}
 				>
-					<span>Create User</span>
-					{isSubmitting && <div className="spinner-border spinner-border-sm" role="status"></div>}
+					<span>Create user</span>
+					{isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
 				</Button>
 			</Form>
 		</Container>

@@ -1,6 +1,4 @@
-import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useSignIn } from "../../hooks/useSignIn";
 
 import Header from "../../components/Header";
 
@@ -8,30 +6,11 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import InputGroup from "react-bootstrap/InputGroup";
+import { Link } from "react-router-dom";
 
 export default function SignIn() {
-	const { user, error: authError, status: authStatus, login, clear } = useAuth();
-	const navigate = useNavigate();
-
-	const emailRef = useRef();
-	const passwordRef = useRef();
-
-	useEffect(() => {
-		return clear;
-	}, [clear]);
-
-	useEffect(() => {
-		if (user) navigate("/home", { replace: true });
-	}, [user, navigate]);
-
-	function handleSubmit(event) {
-		event.preventDefault();
-
-		const email = emailRef.current.value;
-		const password = passwordRef.current.value;
-
-		login(email, password);
-	}
+	const { handleSubmit, signInState, errors } = useSignIn();
 
 	return (
 		<div className="d-flex flex-column vh-100">
@@ -40,25 +19,31 @@ export default function SignIn() {
 				<Card style={{ width: "24rem" }}>
 					<Card.Body className="bg-light">
 						<h1 className="text-center fw-light fs-3 my-3">Sign In</h1>
-						{authError && <Alert variant="danger text-center">{authError.message}</Alert>}
+						{signInState.isFailed && <Alert variant="danger text-center">{signInState.error.message}</Alert>}
 						<Form className="p-2" onSubmit={handleSubmit}>
 							<Form.Group className="mb-3">
-								<Form.Label htmlFor="input_email">Email address</Form.Label>
-								<Form.Control id="input_email" type="email" placeholder="Enter email" ref={emailRef} required />
+								<Form.Label htmlFor="input-email">Email address</Form.Label>
+								<InputGroup hasValidation>
+									<Form.Control id="input-email" name="email" type="email" />
+									<Form.Control.Feedback type="invalid">{errors?.email}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Form.Group className="mb-3">
-								<Form.Label htmlFor="input_password">Password</Form.Label>
-								<Form.Control id="input_password" type="password" placeholder="Password" ref={passwordRef} required />
+								<Form.Label htmlFor="input-password">Password</Form.Label>
+								<InputGroup hasValidation>
+									<Form.Control id="input-password" name="password" type="password" />
+									<Form.Control.Feedback type="invalid">{errors?.password}</Form.Control.Feedback>
+								</InputGroup>
 							</Form.Group>
 							<Button
 								className="w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
 								variant="primary"
 								size="sm"
 								type="submit"
-								disabled={authStatus === "loading"}
+								disabled={signInState.isLoading}
 							>
 								<span>Sign In</span>
-								{authStatus === "loading" && <div className="spinner-border spinner-border-sm" role="status"></div>}
+								{signInState.isLoading && <div className="spinner-border spinner-border-sm" role="status"></div>}
 							</Button>
 						</Form>
 					</Card.Body>

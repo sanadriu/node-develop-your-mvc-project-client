@@ -1,42 +1,35 @@
 import Pagination from "react-bootstrap/Pagination";
+import { usePagination } from "../../hooks/usePagination";
 
-export default function NavPagination(props) {
-	const { currentPage, lastPage, setCurrentPage } = props;
-	const offset = 1;
-	const length = offset * 2 + 1;
+const offset = 2;
 
-	let start = currentPage - offset;
-	let end = currentPage + offset;
+export default function NavPagination({ lastPage = 1 }) {
+	const { page, setPage } = usePagination();
 
-	if (end > lastPage - offset * 2) start = lastPage - offset * 2;
-	if (start < 1) start = 1;
+	const start = page - offset < 1 ? 1 : page - offset;
+	const end = page + offset > lastPage ? lastPage : page + offset;
 
-	const Items = Array.from({ length: length < lastPage ? length : lastPage }, (v, index) => {
-		const page = start + Number(index);
+	const length = end - start || 1;
+	const list = Array.from({ length }, (v, i) => start + i);
 
-		return (
-			<Pagination.Item
-				key={`page-${page}`}
-				active={page === currentPage}
-				disabled={page < 1 || page > lastPage}
-				onClick={() => setCurrentPage(page)}
-			>
-				{page}
-			</Pagination.Item>
-		);
-	});
+	if (!page || !lastPage) return null;
 
 	return (
-		<>
-			{currentPage && lastPage && (
-				<Pagination>
-					<Pagination.First disabled={currentPage <= 1} onClick={() => setCurrentPage(1)} />
-					<Pagination.Prev disabled={currentPage <= 1} onClick={() => setCurrentPage(currentPage - 1)} />
-					{Items}
-					<Pagination.Next disabled={currentPage >= lastPage} onClick={() => setCurrentPage(currentPage + 1)} />
-					<Pagination.Last disabled={currentPage >= lastPage} onClick={() => setCurrentPage(lastPage)} />
-				</Pagination>
-			)}
-		</>
+		<Pagination>
+			<Pagination.First disabled={page === 1} onClick={() => setPage(1)} />
+			<Pagination.Prev disabled={page <= 1} onClick={() => setPage(page - 1)} />
+			{list.map((index) => (
+				<Pagination.Item
+					key={`page-${page}`}
+					active={index === page}
+					disabled={index === page}
+					onClick={() => setPage(index)}
+				>
+					{index}
+				</Pagination.Item>
+			))}
+			<Pagination.Next disabled={page >= lastPage} onClick={() => setPage(page + 1)} />
+			<Pagination.Last disabled={page === lastPage} onClick={() => setPage(lastPage)} />
+		</Pagination>
 	);
 }

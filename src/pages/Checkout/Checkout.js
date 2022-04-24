@@ -8,22 +8,21 @@ import Header from "../../components/Header";
 import Container from "react-bootstrap/Container";
 
 const steps = { 1: "Shipping address", 2: "Payments details", 3: "Order summary" };
+const stepsLength = Object.entries(steps).length;
 
 export default function Checkout() {
 	const { user } = useAuth();
 	const { cartItems } = useCart();
-	const {
-		state: { step },
-	} = useCheckout();
+	const { step } = useCheckout();
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (user === null) navigate("/sign-in");
+		if (user === null) navigate("/sign-in", { replace: true });
 	}, [navigate, user]);
 
 	useEffect(() => {
-		if (cartItems.length === 0) navigate("/home");
+		if (cartItems.length === 0) navigate("/home", { replace: true });
 	}, [navigate, cartItems]);
 
 	return (
@@ -33,7 +32,9 @@ export default function Checkout() {
 				<Container className="mb-4" style={{ maxWidth: "768px" }}>
 					<header className="d-flex align-items-center justify-content-between">
 						<h2 className="fw-light">{steps[step]}</h2>
-						<span>{step} of 3</span>
+						<span>
+							{step} of {stepsLength}
+						</span>
 					</header>
 					<hr className="mt-0 mb-3" />
 					<div className="d-flex justify-content-center shadow p-3bg-white rounded">

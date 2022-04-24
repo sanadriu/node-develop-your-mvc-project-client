@@ -1,4 +1,4 @@
-import { useCart } from "../../contexts/CartContext/CartContext";
+import { useCart } from "../../contexts/CartContext";
 
 export default function CartItem(props) {
 	const { item } = props;

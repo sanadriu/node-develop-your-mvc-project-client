@@ -1,96 +1,106 @@
-import * as Auth from "../../services/auth";
-import {
-	setAuthStartLoading,
-	setAuthEndLoading,
-	setAuthError,
-	setAuthUser,
-	clearAuthError,
-	clearAuthUser,
-} from "./actions";
-import { userRegister, userSync } from "../../api";
+import * as auth from "../../services/auth.service";
+import * as api from "../../api/auth.api";
+import * as actions from "../../reducers/auth/actions";
 
-export function syncHandler(dispatch, firebaseUser) {
-	if (firebaseUser) {
-		dispatch(setAuthStartLoading());
+export async function syncHandler(dispatch) {
+	dispatch(actions.setSignInLoading());
 
-		const token = firebaseUser.accessToken;
+	try {
+		const token = await auth.getCurrentUserToken();
 
-		userSync({ token })
-			.then((response) => {
-				const { success, message, data } = response;
+		if (!token) return dispatch(actions.resetUser());
 
-				if (!success) return Promise.reject(message);
+		const response = await api.userSignIn({ token });
 
-				const user = {
-					...firebaseUser,
-					...data,
-				};
+		const { success, message, data: user } = response;
 
-				dispatch(setAuthUser(user));
-			})
-			.catch((error) => {
-				dispatch(setAuthError(error));
-			});
-	} else {
-		dispatch(clearAuthUser());
+		if (!success) throw new Error(message);
+
+		dispatch(actions.setSignInSuccess(user));
+	} catch (error) {
+		dispatch(actions.setSignInError(error));
 	}
 }
 
-export function registerHandler(dispatch, data) {
-	dispatch(setAuthStartLoading());
+export async function signUpHandler(dispatch, data) {
+	dispatch(actions.setSignUpLoading());
 
-	userRegister({ data })
-		.then((response) => {
-			const { success, message } = response;
+	try {
+		await auth.signUpWithEmailAndPassword(data.email, data.password);
 
-			if (!success) return Promise.reject(message);
+		const token = await auth.getCurrentUserToken();
+		const response = await api.userSignUp({ token, data });
 
-			return Auth.signInWithEmailAndPassword(data.email, data.password);
-		})
-		.then(() => {
-			dispatch(setAuthEndLoading());
-		})
-		.catch((error) => {
-			dispatch(setAuthError(error));
-		});
+		const { success, message, data: user } = response;
+
+		if (!success) throw new Error(message);
+
+		dispatch(actions.setSignUpSuccess(user));
+	} catch (error) {
+		await auth.deleteCurrentUser();
+
+		dispatch(actions.setSignUpError(error));
+	}
 }
 
-export function loginHandler(dispatch, email, password) {
-	dispatch(setAuthStartLoading());
+export async function signInHandler(dispatch, data) {
+	dispatch(actions.setSignInLoading());
 
-	Auth.signInWithEmailAndPassword(email, password)
-		.then(() => {
-			dispatch(setAuthEndLoading());
-		})
-		.catch((error) => {
-			dispatch(setAuthError(error));
-		});
+	try {
+		await auth.signInWithEmailAndPassword(data.email, data.password);
+
+		const token = await auth.getCurrentUserToken();
+		const response = await api.userSignIn({ token });
+
+		const { success, message, data: user } = response;
+
+		if (!success) throw new Error(message);
+
+		dispatch(actions.setSignInSuccess(user));
+	} catch (error) {
+		await auth.signOut();
+
+		dispatch(actions.setSignInError(error));
+	}
 }
 
-export function logoutHandler(dispatch) {
-	dispatch(setAuthStartLoading());
+export async function signOutHandler(dispatch) {
+	dispatch(actions.setSignOutLoading());
 
-	Auth.signOut()
-		.then(() => {
-			dispatch(clearAuthUser());
-		})
-		.catch((error) => {
-			dispatch(setAuthError(error));
-		});
+	try {
+		const token = await auth.getCurrentUserToken();
+		const response = await api.userSignOut({ token });
+
+		const { success, message } = response;
+
+		if (!success) throw new Error(message);
+
+		dispatch(actions.setSignOutSuccess());
+
+		await auth.signOut();
+	} catch (error) {
+		await auth.signOut();
+
+		dispatch(actions.setSignOutError(error));
+	}
 }
 
-export function resetPasswordHandler(dispatch, email) {
-	dispatch(setAuthStartLoading());
-
-	Auth.sendPasswordResetEmail(email)
-		.then(() => {
-			dispatch(setAuthEndLoading());
-		})
-		.catch((error) => {
-			dispatch(setAuthError(error));
-		});
+export function signUpResetHandler(dispatch) {
+	dispatch(actions.resetSignUp);
 }
 
-export function clear(dispatch) {
-	dispatch(clearAuthError);
+export function signInResetHandler(dispatch) {
+	dispatch(actions.resetSignIn);
+}
+
+export function signOutResetHandler(dispatch) {
+	dispatch(actions.resetSignOut);
+}
+
+export function sendPasswordResetEmailHandler() {
+	return auth.sendPasswordResetEmail();
+}
+
+export function getCurrentUserTokenHandler() {
+	return auth.getCurrentUserToken();
 }

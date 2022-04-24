@@ -1,4 +1,4 @@
-import { request } from "../services/api";
+import { request } from "../services/api.service";
 import ApiErrors from "./constants/errors";
 
 export function getOrders({ signal, token, params: { page = 1 } }) {
@@ -20,8 +20,8 @@ export function getOrders({ signal, token, params: { page = 1 } }) {
 }
 
 export function getOrder({ signal, token, id }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("Order ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_order_id);
 
 	const config = {
 		url: `${ApiRoutes.orders}/${id}`,
@@ -36,7 +36,7 @@ export function getOrder({ signal, token, id }) {
 }
 
 export function createOrder({ signal, token, data }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
 
 	const config = {
 		url: `${ApiRoutes.orders}`,
@@ -52,8 +52,8 @@ export function createOrder({ signal, token, data }) {
 }
 
 export function getUserOrders({ signal, token, id }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_user_id);
 
 	const config = {
 		url: `${ApiRoutes.users}/${id}/orders`,
@@ -68,8 +68,8 @@ export function getUserOrders({ signal, token, id }) {
 }
 
 export function getUserOrder({ signal, token, id, params: { index = 1 } }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_user_id);
 
 	const config = {
 		url: `${ApiRoutes.users}/${id}/orders/${index}`,

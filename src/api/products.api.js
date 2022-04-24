@@ -1,4 +1,5 @@
-import { request } from "../services/api";
+import { request } from "../services/api.service";
+import ApiErrors from "./constants/errors";
 
 export function getProducts({ signal, params: { page = 1 } }) {
 	const config = {
@@ -14,7 +15,7 @@ export function getProducts({ signal, params: { page = 1 } }) {
 }
 
 export function getProduct({ signal, id }) {
-	if (!id) return Promise.reject("User ID must be provided");
+	if (!id) return Promise.reject(ApiErrors.missing_product_id);
 
 	const config = {
 		url: `/products/${id}`,
@@ -26,7 +27,7 @@ export function getProduct({ signal, id }) {
 }
 
 export function createProduct({ signal, token, data }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
 
 	const config = {
 		url: "/products",
@@ -42,8 +43,8 @@ export function createProduct({ signal, token, data }) {
 }
 
 export function updateProduct({ signal, token, id, data }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("Product ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_product_id);
 
 	const config = {
 		url: `/products/${id}`,
@@ -59,8 +60,8 @@ export function updateProduct({ signal, token, id, data }) {
 }
 
 export function deleteProduct({ signal, token, id }) {
-	if (!token) return Promise.reject("Auth bearer token must be provided");
-	if (!id) return Promise.reject("Product ID must be provided");
+	if (!token) return Promise.reject(ApiErrors.missing_auth_token);
+	if (!id) return Promise.reject(ApiErrors.missing_product_id);
 
 	const config = {
 		url: `/products/${id}`,

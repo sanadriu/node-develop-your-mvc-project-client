@@ -13,8 +13,8 @@ const allowedRoles = ["admin", "main-admin"];
 
 export default function Dashboard() {
 	const { user } = useAuth();
-	const navigate = useNavigate();
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!allowedRoles.includes(user?.role)) navigate("/home", { replace: true });

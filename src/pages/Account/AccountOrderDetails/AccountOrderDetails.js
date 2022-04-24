@@ -1,47 +1,39 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { useFetchUserOrder } from "../../../hooks";
+import { useRequest } from "../../../hooks/useRequest";
+import { getUserOrder } from "../../../api/orders.api";
 
 import Error from "../../../components/Error";
-
 import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 
 export default function AccountOrderDetails() {
 	const { numOrder } = useParams();
-	const { user } = useAuth();
+	const { user, getCurrentUserToken } = useAuth();
 
-	const { request, send: getOrder } = useFetchUserOrder();
-	const { response, status, error } = request;
-	const { success, message, data: order } = response;
+	const { response, error, isLoading, isFailed, sendRequest } = useRequest(getUserOrder);
 
 	useEffect(() => {
-		if (!user) return;
-
-		const params = {
-			token: user.accessToken,
-			id: user._id,
-			numOrder,
-		};
-
-		getOrder(params);
-	}, [getOrder, user, numOrder]);
+		getCurrentUserToken().then((token) => {
+			sendRequest({ token, params: { index: numOrder }, id: user._id });
+		});
+	}, [sendRequest, user, page]);
 
 	return (
 		<Container as="main">
-			{status === "loading" && (
+			{isLoading && (
 				<Container className="d-flex align-items-center justify-content-center h-100">
 					<Spinner animation="border" role="status" />
 				</Container>
 			)}
-			{status === "done" && success && (
+			{!isLoading && response?.success === true && (
 				<>
 					<Container className="mb-3">
 						<div className="d-flex justify-content-between align-items-center">
 							<h1 className="fw-light m-0">Order details</h1>
-							<span className="fw-light">{`Order #${order._id}`}</span>
+							<span className="fw-light">{`Order #${response.data._id}`}</span>
 						</div>
 						<hr className="mt-2 mb-3" />
 						<div>
@@ -49,39 +41,41 @@ export default function AccountOrderDetails() {
 							<ListGroup className="mb-2">
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>Purchase cost (€)</span>
-									<span className="fw-light">{order.products.reduce((acc, product) => acc + product.price, 0)}</span>
+									<span className="fw-light">
+										{response.data.products.reduce((acc, product) => acc + product.price, 0)}
+									</span>
 								</ListGroup.Item>
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>Shipping cost (€)</span>
-									<span className="fw-light">{order.shippingCost}</span>
+									<span className="fw-light">{response.data.shippingCost}</span>
 								</ListGroup.Item>
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>nº items</span>
-									<span className="fw-light">{order.products.length}</span>
+									<span className="fw-light">{response.data.products.length}</span>
 								</ListGroup.Item>
 							</ListGroup>
 							<h6 className="fs-6 py-2 fw-normal border-bottom">Shipping Address</h6>
 							<ListGroup className="mb-2">
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>Address</span>
-									<span className="fw-light">{order.shippingAddress.address}</span>
+									<span className="fw-light">{response.data.shippingAddress.address}</span>
 								</ListGroup.Item>
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>City</span>
-									<span className="fw-light">{order.shippingAddress.city}</span>
+									<span className="fw-light">{response.data.shippingAddress.city}</span>
 								</ListGroup.Item>
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>Postal code</span>
-									<span className="fw-light">{order.shippingAddress.postalCode}</span>
+									<span className="fw-light">{response.data.shippingAddress.postalCode}</span>
 								</ListGroup.Item>
 								<ListGroup.Item className="d-flex justify-content-between">
 									<span>Country code</span>
-									<span className="fw-light">{order.shippingAddress.countryCode}</span>
+									<span className="fw-light">{response.data.shippingAddress.countryCode}</span>
 								</ListGroup.Item>
 							</ListGroup>
 							<h6 className="fs-6 py-2 fw-normal border-bottom">Products</h6>
 							<ListGroup className="mb-2">
-								{order.products.map((item) => {
+								{response.data.products.map((item) => {
 									return item.product !== null ? (
 										<ListGroup.Item
 											key={item.product._id}
@@ -110,8 +104,8 @@ export default function AccountOrderDetails() {
 					</Container>
 				</>
 			)}
-			{status === "done" && !success && <Error message={message} />}
-			{status === "error" && <Error message={error.message} />}
+			{!isLoading && response?.success === false && <Error message={response.message} />}
+			{!isLoading && isFailed && <Error message={error.message} />}
 		</Container>
 	);
 }

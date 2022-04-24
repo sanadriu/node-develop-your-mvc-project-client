@@ -10,7 +10,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
-export default function Header(props) {
+export default function Header() {
 	const { user } = useAuth();
 	const { cartItems } = useCart();
 	const [displayCart, setDisplayCart] = useState(false);

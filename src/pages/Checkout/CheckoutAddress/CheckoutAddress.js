@@ -8,11 +8,7 @@ import { Form, InputGroup } from "react-bootstrap";
 
 export default function CheckoutAddress(props) {
 	const navigate = useNavigate();
-	const {
-		state: { shippingAddress, step },
-		goNext,
-		setShippingAddress,
-	} = useCheckout();
+	const { shippingAddress, step, goNext, setShippingAddress } = useCheckout();
 
 	useEffect(() => {
 		if (step !== 1) navigate(`../${step}`);
@@ -23,10 +19,7 @@ export default function CheckoutAddress(props) {
 			...shippingAddress,
 		},
 		validationSchema: schema,
-		onSubmit: (values, actions) => {
-			const { setSubmitting } = actions;
-
-			setSubmitting(true);
+		onSubmit: (values) => {
 			setShippingAddress(values);
 			goNext();
 		},

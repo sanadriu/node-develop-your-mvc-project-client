@@ -8,12 +8,7 @@ import { Form, InputGroup } from "react-bootstrap";
 
 export default function CheckoutPayment(props) {
 	const navigate = useNavigate();
-	const {
-		state: { paymentDetails, step },
-		goBack,
-		goNext,
-		setPaymentDetails,
-	} = useCheckout();
+	const { paymentDetails, step, goBack, goNext, setPaymentDetails } = useCheckout();
 
 	useEffect(() => {
 		if (step !== 2) navigate(`../${step}`);
